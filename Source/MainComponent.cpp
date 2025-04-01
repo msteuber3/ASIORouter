@@ -2,6 +2,26 @@
 
 #include "MainComponent.h"
 
+
+// So MainComponent will inherit from component. 
+//      Each input device will be its own AudioIODevice and will need its own AudioIODeviceCallback
+//      Then, a custom AudioDeviceManager (Not that inherits from that, but replaces it) 
+//      & a mixer class that recieves all input buffers
+
+// AudioIODevice -> AudioProcessorPlayer:audioDeviceIOCallbackWithContext -> an AudioProcessor -> an audioProcessor graph -> some output
+// Remember that integral to this plan is the 
+
+// Required classes:
+/*
+*  MainComponent:Component
+*  InputDevice:AudioIODevice
+*       The device class should turn the input channels of the device into a list of AudioProcessors in a graph and then the final graph is a compiliation of all the graphs
+*  InputChannel:AudioProcessor
+*  InputDeviceManager
+* 
+*/
+
+
 MainComponent::MainComponent() : juce::AudioAppComponent(uniqueDeviceManager)
 {
     uniqueDeviceManager.initialise(20, 2, nullptr, true);
@@ -9,27 +29,6 @@ MainComponent::MainComponent() : juce::AudioAppComponent(uniqueDeviceManager)
     addAndMakeVisible(audioSetting.get());
 
 
-    //======================================================================================================================================
-    FOLEYS_SET_SOURCE_PATH(__FILE__);
-
-    manager.registerBasicFormats();
-
-    magicBuilder.registerJUCELookAndFeels();
-    magicBuilder.registerJUCEFactories();
-
-    magicState.setGuiValueTree(BinaryData::magic_xml, BinaryData::magic_xmlSize);
-    //magicBuilder.createGUI(*this);
-    //updatePositionSlider();
-
-    setSize(800, 600);
-
-
-
-#if FOLEYS_SHOW_GUI_EDITOR_PALLETTE
-    magicBuilder.attachToolboxToWindow(*this);
-#endif
-
-    //======================================================================================================================================
 
 
     setAudioChannels(20, 2);

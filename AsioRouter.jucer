@@ -4,12 +4,14 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{8BC91170-A716-BC10-1847-94125E91A01D}" name="Source">
+      <FILE id="LrVVUs" name="Channel.cpp" compile="1" resource="0" file="Source/Channel.cpp"/>
+      <FILE id="kSXsk9" name="Channel.h" compile="0" resource="0" file="Source/Channel.h"/>
+      <FILE id="rRs3T1" name="magic.xml" compile="0" resource="1" file="Source/magic.xml"/>
       <FILE id="O0ugCg" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="x6TcOn" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="EEy0xc" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
-    <FILE id="rRs3T1" name="magic.xml" compile="0" resource="1" file="Source/magic.xml"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="foleys_gui_magic" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>

@@ -724,6 +724,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Channel.cpp">
+      <Filter>AsioRouter\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
@@ -3846,6 +3849,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Channel.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\MainComponent.h">
       <Filter>AsioRouter\Source</Filter>
     </ClInclude>
@@ -8022,7 +8028,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Source\magic.xml">
-      <Filter>AsioRouter</Filter>
+      <Filter>AsioRouter\Source</Filter>
     </None>
     <None Include="..\..\..\JUCE\modules\juce_audio_devices\native\oboe\src\common\README.md">
       <Filter>JUCE Modules\juce_audio_devices\native\oboe\src\common</Filter>
