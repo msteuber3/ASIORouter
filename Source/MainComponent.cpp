@@ -14,89 +14,102 @@
 // Required classes:
 /*
 *  MainComponent:Component
-*  InputDevice:AudioIODevice
+* Scan for device types and have the user select one, then pass that to v
+*  InputDevice:AudioProcessorPlayer
 *       The device class should turn the input channels of the device into a list of AudioProcessors in a graph and then the final graph is a compiliation of all the graphs
 *  InputChannel:AudioProcessor
+*       This is where the sliders come in
 *  InputDeviceManager
 * 
 */
 
 
-MainComponent::MainComponent() : juce::AudioAppComponent(uniqueDeviceManager)
+MainComponent::MainComponent()  : Component()
 {
-    uniqueDeviceManager.initialise(20, 2, nullptr, true);
-    audioSetting.reset(new juce::AudioDeviceSelectorComponent(uniqueDeviceManager, 0, 20, 0, 2, true, true, true, true));
-    addAndMakeVisible(audioSetting.get());
+    mainDeviceManager.initialise(20, 2, nullptr, true);
+    mainDeviceManager.createAudioDeviceTypes(deviceTypes);
+
+    createGuiElements();
 
 
-
-
-    setAudioChannels(20, 2);
-
-    createChannels();
-
+    setPaintingIsUnclipped(true);
     setSize(1000, 800);
 }
 
-MainComponent::~MainComponent()
-{
-    shutdownAudio();
+MainComponent::~MainComponent() {}
+
+void MainComponent::createGuiElements() {
+    juce::Label deviceTypeLabel{ {}, "Select audio driver" };
+    juce::Font textFont{ 12.0f };
+    deviceTypeLabel.setFont(textFont);
+    addAndMakeVisible(deviceTypeLabel);
+    addAndMakeVisible(audioDrivers);
+    for (size_t i = 0; i < deviceTypes.size(); i++) {
+        audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
+    }
+    audioDrivers.onChange = [this] { changeAudioDriver(); };
+    audioDrivers.setSelectedId(1);
+    ScanCurrentDriver();
+
 }
 
-void MainComponent::prepareToPlay(int, double) {
-    // Initialize channels here when a source is loaded
+void MainComponent::changeAudioDriver() {
+    int id = audioDrivers.getSelectedId() - 1;
+    mainDeviceManager.setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
 }
 
-void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
-    // Alter volume here
+void MainComponent::ScanCurrentDriver() {
+    auto* deviceType = mainDeviceManager.getCurrentDeviceTypeObject();
+
+    if (!deviceType) {
+        DBG("Error: No valid device type found.");
+        return;
+    }
+    int x;
+    int y;
+    deviceType->scanForDevices();
+    inDeviceNames = deviceType->getDeviceNames(true);
+    outDeviceNames = deviceType->getDeviceNames(false);
+	int ind = 0;
+    for (const juce::String& name : inDeviceNames) {
+        // Create input device
+        auto inDevice = std::make_unique<AudioInputDevice>(name, name, deviceType, ind);
+        int maxIn = inDevice->createChannels(this);
+
+        // Move unique_ptr into vector
+        inputDevices.push_back(std::move(inDevice));
+        ind++;
+
+        // Add channels to the graph
+        for (int inChannel = 0; inChannel < maxIn; inChannel++) {
+            if (inputDevices.back()->channels[inChannel]) {  // Ensure valid pointer
+                x = inputDevices.back()->channels[inChannel]->getXCoord();
+                y = inputDevices.back()->channels[inChannel]->getYCoord();
+                inputDevices.back()->channels[inChannel]->setBounds(x, y, 100, 200);
+                outputGraph.addNode(std::move(inputDevices.back()->channels[inChannel]));
+                
+            }
+        }
+    }
 }
-
-void MainComponent::releaseResources() {
-    // Delete channels here
-}
-
-
 
 void MainComponent::resized() {
-    int channelWidth = 75;
-    for (int i = 0; i < channels.size(); i++) {
-        channels[i]->setBounds(i * channelWidth, 0, channelWidth, 300);
-    }
-    audioSetting->setBounds(10, 300, 300, 400);
-}
+    //textLabel.setBounds(10, 10, getWidth() - 20, 20);
+    audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
 
-void MainComponent::initializeMenu()
-{
-
-}
-
-void MainComponent::createChannels()
-{
-
-    auto* device = deviceManager.getCurrentAudioDevice();
-    auto activeInputChannels = device->getActiveInputChannels();
-    auto activeOutputChannels = device->getActiveOutputChannels();
-    auto maxInputChannels = activeInputChannels.getHighestBit() + 1;
-    auto maxOutputChannels = activeOutputChannels.getHighestBit() + 1;
-
-    for (int i = 0; i < maxInputChannels; i++) {
-        auto channel = std::make_unique<Channel>(i, device->getInputChannelNames()[i]);
-        addAndMakeVisible(*channel);
-        channels.push_back(std::move(channel));
+    for (int ind = 0; ind < channels.size(); ind++) {
+        int x = channels[ind]->getXCoord();
+        int y = channels[ind]->getYCoord();
+        channels[ind]->setBounds(x, y, 200, 100);
     }
 
+    //int channelWidth = 75;
+    //for (int i = 0; i < channels.size(); i++) {
+    //    channels[i]->setBounds(i * channelWidth, 0, channelWidth, 300);
+   // }
+//    audioSetting->setBounds(10, 300, 300, 400);
 
 }
 
-//void MainComponent::paint (juce::Graphics& g)
-//{
-//    //// (Our component is opaque, so we must completely fill the background with a solid colour)
-//    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-//    
-//    g.setFont (juce::FontOptions (16.0f));
-//    g.setColour (juce::Colours::white);
-//    g.drawText ("Hello World!", getLocalBounds(), juce::Justification::centred, true);
-//
-//    
-//}
+void MainComponent::initializeMenu() {}
 

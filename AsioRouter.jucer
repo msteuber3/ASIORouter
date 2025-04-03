@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="GTeREr" name="AsioRouter" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1"
+              headerPath="&quot;C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\&quot;">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{8BC91170-A716-BC10-1847-94125E91A01D}" name="Source">
       <FILE id="LrVVUs" name="Channel.cpp" compile="1" resource="0" file="Source/Channel.cpp"/>
       <FILE id="kSXsk9" name="Channel.h" compile="0" resource="0" file="Source/Channel.h"/>
-      <FILE id="rRs3T1" name="magic.xml" compile="0" resource="1" file="Source/magic.xml"/>
       <FILE id="O0ugCg" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="x6TcOn" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="EEy0xc" name="MainComponent.cpp" compile="1" resource="0"
@@ -14,7 +14,6 @@
     </GROUP>
   </MAINGROUP>
   <MODULES>
-    <MODULE id="foleys_gui_magic" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -29,7 +28,8 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" FOLEYS_ENABLE_BINARY_DATA="1"/>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" FOLEYS_ENABLE_BINARY_DATA="1"
+               FOLEYS_SHOW_GUI_EDITOR_PALLETTE="1"/>
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
@@ -48,7 +48,6 @@
         <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
-        <MODULEPATH id="foleys_gui_magic" path="../foleys_gui_magic-1.4.0/modules"/>
         <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
         <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
       </MODULEPATHS>

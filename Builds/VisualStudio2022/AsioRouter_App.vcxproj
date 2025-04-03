@@ -60,8 +60,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;C:\Users\Michael\Programming\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_foleys_gui_magic=1;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;FOLEYS_ENABLE_BINARY_DATA=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;C:\Users\Michael\Programming\JUCE\modules;"C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCE_ASIO=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -74,8 +74,8 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;C:\Users\Michael\Programming\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_foleys_gui_magic=1;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;FOLEYS_ENABLE_BINARY_DATA=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;C:\Users\Michael\Programming\JUCE\modules;"C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCE_ASIO=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\AsioRouter.exe</OutputFile>
@@ -102,8 +102,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;C:\Users\Michael\Programming\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_foleys_gui_magic=1;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;FOLEYS_ENABLE_BINARY_DATA=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;C:\Users\Michael\Programming\JUCE\modules;"C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCE_ASIO=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -116,8 +116,8 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;C:\Users\Michael\Programming\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_foleys_gui_magic=1;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;FOLEYS_ENABLE_BINARY_DATA=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;C:\Users\Michael\Programming\JUCE\modules;"C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCE_PROJUCER_VERSION=0x80006;JUCE_MODULE_AVAILABLE_juce_audio_basics=1;JUCE_MODULE_AVAILABLE_juce_audio_devices=1;JUCE_MODULE_AVAILABLE_juce_audio_formats=1;JUCE_MODULE_AVAILABLE_juce_audio_processors=1;JUCE_MODULE_AVAILABLE_juce_audio_utils=1;JUCE_MODULE_AVAILABLE_juce_core=1;JUCE_MODULE_AVAILABLE_juce_cryptography=1;JUCE_MODULE_AVAILABLE_juce_data_structures=1;JUCE_MODULE_AVAILABLE_juce_dsp=1;JUCE_MODULE_AVAILABLE_juce_events=1;JUCE_MODULE_AVAILABLE_juce_graphics=1;JUCE_MODULE_AVAILABLE_juce_gui_basics=1;JUCE_MODULE_AVAILABLE_juce_gui_extra=1;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JUCE_STRICT_REFCOUNTEDPOINTER=1;JUCE_STANDALONE_APPLICATION=1;JUCE_ASIO=1;JUCER_VS2022_78A503E=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\AsioRouter.exe</OutputFile>
@@ -138,138 +138,10 @@
     <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\AudioInputDevice.cpp" />
     <ClCompile Include="..\..\Source\Channel.cpp" />
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\MainComponent.cpp" />
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_GUITreeEditor.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_MultiListPropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_Palette.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_PropertiesEditor.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleBoolPropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleChoicePropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleColourPropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleGradientPropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StylePropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleTextPropertyComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_ToolBox.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_ApplicationSettings.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicGUIBuilder.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicJUCEFactories.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicPluginEditor.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicProcessor.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_Resources.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_DefaultGuiTrees.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Container.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Decorator.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_GradientBackground.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_GuiItem.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_RootItem.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Stylesheet.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_JuceLookAndFeels.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_LookAndFeel.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_Skeuomorphic.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MagicGUIState.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MagicProcessorState.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MidiParameterMapper.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_ParameterManager.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_RadioButtonManager.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicAnalyser.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicFilterPlot.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicLevelSource.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicOscilloscope.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_FileBrowserDialog.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MagicLevelMeter.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MagicPlotComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MidiDrumpadComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MidiLearnComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_XYDragComponent.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\foleys_gui_magic.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -400,6 +272,24 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\juce_audio_basics.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\asio.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\asiodrvr.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\combase.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\debugmessage.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\dllentry.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\register.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_devices\audio_io\juce_AudioDeviceManager.cpp">
@@ -3045,8 +2935,6 @@
     <ClCompile Include="..\..\..\JUCE\modules\juce_gui_extra\juce_gui_extra.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp" />
-    <ClCompile Include="..\..\JuceLibraryCode\include_foleys_gui_magic.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_devices.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_formats.cpp" />
@@ -3073,63 +2961,13 @@
       <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_gui_extra.cpp" />
+    <ClCompile Include="..\..\Source\MainMixer.cpp" />
+    <ClCompile Include="..\..\Source\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AudioInputDevice.h" />
     <ClInclude Include="..\..\Source\Channel.h" />
     <ClInclude Include="..\..\Source\MainComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_GUITreeEditor.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_MultiListPropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_Palette.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_PropertiesEditor.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleBoolPropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleChoicePropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleColourPropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleGradientPropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StylePropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_StyleTextPropertyComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Editor\foleys_ToolBox.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_ApplicationSettings.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicGUIBuilder.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicPluginEditor.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_MagicProcessor.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_Resources.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_SettableProperties.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\General\foleys_StringDefinitions.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_AtomicValueAttachment.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_Conversions.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_DefaultGuiTrees.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_MouseLambdas.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_ParameterAttachment.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_PopupMenuHelper.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Helpers\foleys_ScopedInterProcessLock.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_BoxModel.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Container.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Decorator.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_GradientBackground.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_GuiItem.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_RootItem.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Layout\foleys_Stylesheet.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_JuceLookAndFeels.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_LookAndFeel.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\LookAndFeels\foleys_Skeuomorphic.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MagicGUIState.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MagicProcessorState.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_MidiParameterMapper.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_ParameterManager.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\State\foleys_RadioButtonManager.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicAnalyser.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicFilterPlot.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicLevelSource.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicOscilloscope.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Visualisers\foleys_MagicPlotSource.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_AutoOrientationSlider.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_FileBrowserDialog.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MagicLevelMeter.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MagicPlotComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MidiDrumpadComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_MidiLearnComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\Widgets\foleys_XYDragComponent.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\modules\foleys_gui_magic\foleys_gui_magic.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
@@ -3192,6 +3030,12 @@
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\utilities\juce_Reverb.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\utilities\juce_SmoothedValue.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\asio.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\asiodrvr.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\asiosys.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\combase.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\iasiodrv.h" />
+    <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\ASIOHeaders\wxdebug.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\audio_io\juce_AudioDeviceManager.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\audio_io\juce_AudioIODevice.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_devices\audio_io\juce_AudioIODeviceType.h" />
@@ -4465,8 +4309,9 @@
     <ClInclude Include="..\..\..\JUCE\modules\juce_gui_extra\misc\juce_WebControlRelays.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_gui_extra\native\juce_NSViewFrameWatcher_mac.h" />
     <ClInclude Include="..\..\..\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
-    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
+    <ClInclude Include="..\..\Source\MainMixer.h" />
+    <ClInclude Include="..\..\Source\Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\JUCE\modules\juce_audio_devices\native\oboe\src\common\README.md" />

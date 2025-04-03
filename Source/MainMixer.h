@@ -4,7 +4,7 @@
 class MainMixer : public juce::MixerAudioSource, public juce::AudioIODeviceCallback
 {
 public:
-	MainMixer(const juce::AudioDeviceManager &mixerManager);
+	MainMixer(juce::AudioDeviceManager& mixerManager);
 	~MainMixer();
 
 	void audioDeviceIOCallbackWithContext(const float* const * inputChannelData, int numInputChannels,
@@ -18,6 +18,6 @@ public:
 
 private:
 	std::vector<std::unique_ptr<juce::AudioSource>> inputSourceList;
-	juce::AudioDeviceManager &mixerDeviceManager;
+//	juce::AudioDeviceManager &mixerDeviceManager;
 	juce::MixerAudioSource mixer;
 };

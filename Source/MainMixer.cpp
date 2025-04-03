@@ -3,9 +3,9 @@
 // Device manager -> audioIOdevice -> send data to mixer
 
 MainMixer::MainMixer(juce::AudioDeviceManager& mixerManager)
-	: mixerDeviceManager(mixerManager)
 {
-    mixerDeviceManager.addAudioCallback(this);
+    
+ //   mixerDeviceManager.addAudioCallback(this);
 }   
 
 MainMixer::~MainMixer()
@@ -53,7 +53,7 @@ void MainMixer::audioDeviceIOCallbackWithContext(const float* const * inputChann
 
 void MainMixer::InitializeInputDevices()
 {
-	auto* currentDevice = mixerDeviceManager->getCurrentAudioDevice();
+	//auto* currentDevice = mixerDeviceManager->getCurrentAudioDevice();
 }
 
 void MainMixer::RefreshInputDevices()
