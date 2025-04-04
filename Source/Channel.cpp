@@ -10,6 +10,8 @@ Channel::Channel(int index, int deviceIndex, juce::String name)
 
 Channel::~Channel() 
 {
+
+	releaseResources();
 	volumeSlider.removeListener(this);
 }
 
@@ -54,7 +56,7 @@ void Channel::resized()
 	//auto area = juce::Rectangle(xPos, yPos, 100, 200);
 	//
 	volumeLabel.setBounds(0, 0, 100, 50);
-	volumeSlider.setBounds(0, volumeLabel.getBottom(), 100, 150);
+	volumeSlider.setBounds(0, 50, 100, 150);
 	//	area.getWidth(),
 	//	area.getHeight() - volumeLabel.getHeight());
 	//toFront(false);

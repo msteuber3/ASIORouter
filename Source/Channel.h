@@ -59,4 +59,6 @@ private:
 	juce::Slider volumeSlider;
 	juce::Label volumeLabel;
 	float volume;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Channel);
 };

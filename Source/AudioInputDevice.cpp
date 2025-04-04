@@ -1,23 +1,30 @@
 #include "AudioInputDevice.h"
 
-AudioInputDevice::AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd) 
-	: inDeviceName(inDevice), outDeviceName(outDevice), deviceType(deviceType), deviceIndex(deviceInd)
+AudioInputDevice::AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd)
+	: Component(), inDeviceName(inDevice), outDeviceName(outDevice), deviceType(deviceType), deviceIndex(deviceInd), inputDevice(deviceType->createDevice(inDevice, outDevice))
 {
-	juce::AudioProcessorGraph::AudioGraphIOProcessor::IODeviceType NodeType = juce::AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode;
-
-	audioProcessor = new juce::AudioProcessorGraph::AudioGraphIOProcessor(NodeType);
-
     createInputDevice();
 }
 
+AudioInputDevice::~AudioInputDevice() 
+{
+    inputDevice->close();
+    channels.clear();
+    removeAllChildren();
+}
 
+void AudioInputDevice::createGuiElements()
+{
+    sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 200);
+    sliderBox.performLayout(fbRect);
+}
 
-AudioInputDevice::~AudioInputDevice() {}
+ 
 
 bool AudioInputDevice::createInputDevice()
 {
 	//Might break with mics
-	inputDevice = deviceType->createDevice(inDeviceName, outDeviceName);
     if (inputDevice == nullptr)
     {
         juce::Logger::writeToLog("Failed to create input device: " + inDeviceName);
@@ -55,9 +62,25 @@ int AudioInputDevice::createChannels(juce::Component* mainComponent)
     for (int i = 0; i < maxInputChannels; i++) {
 		juce::String name = inputDevice->getInputChannelNames()[i];
         auto channel = std::make_unique<Channel>(i, deviceIndex, name);
-        mainComponent->addAndMakeVisible(*channel);
+        
+        addAndMakeVisible(*channel);
+        
+        sliderBox.items.add(juce::FlexItem(*channel).withMinWidth(100.0f).withMinHeight(200.0f));
+
         channels.push_back(std::move(channel));
     }
     return maxInputChannels;
+}
+
+void AudioInputDevice::resized()
+{
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 200);
+
+    sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap; 
+    sliderBox.flexDirection = juce::FlexBox::Direction::row;
+    sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart; 
+    sliderBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+
+    sliderBox.performLayout(fbRect);
 }
 

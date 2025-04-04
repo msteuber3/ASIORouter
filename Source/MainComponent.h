@@ -24,10 +24,10 @@ private:
 
     void initializeMenu();
 
+    juce::FlexBox mainFlexBox;
     
-    std::vector<std::unique_ptr<Channel>> channels;
+    std::unique_ptr<juce::AudioDeviceManager> mainDeviceManager;
 
-    juce::AudioDeviceManager mainDeviceManager;
     std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSetting;
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
     juce::ComboBox audioDrivers;
@@ -37,7 +37,7 @@ private:
 
     std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
 
-    juce::AudioProcessorGraph outputGraph;
+    std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
  
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

@@ -23,20 +23,41 @@
 * 
 */
 
-
+/*
+* MainComponent shouhld contain the following:
+* GUI stuff, so for the IO portion of this addAndMakeVisible a mixer object
+* 
+* Mixer should take all the input & output info and position it
+* So Mixer Component would be an apt description
+* 
+* each AudioInputDevice should place each individual slider in a row
+* 
+* I also need a lookandfeel class
+* 
+*/
 MainComponent::MainComponent()  : Component()
 {
-    mainDeviceManager.initialise(20, 2, nullptr, true);
-    mainDeviceManager.createAudioDeviceTypes(deviceTypes);
+    mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
+    mainDeviceManager->initialise(20, 2, nullptr, true);
+    mainDeviceManager->createAudioDeviceTypes(deviceTypes);
+
+    outputGraph = std::make_unique<juce::AudioProcessorGraph>();
 
     createGuiElements();
 
 
-    setPaintingIsUnclipped(true);
     setSize(1000, 800);
 }
 
-MainComponent::~MainComponent() {}
+MainComponent::~MainComponent() 
+{
+    outputGraph->clear();
+    inputDevices.clear();
+    mainDeviceManager->removeAllChangeListeners();
+    mainDeviceManager->closeAudioDevice();
+    mainDeviceManager.reset();
+    removeAllChildren();
+}
 
 void MainComponent::createGuiElements() {
     juce::Label deviceTypeLabel{ {}, "Select audio driver" };
@@ -55,11 +76,11 @@ void MainComponent::createGuiElements() {
 
 void MainComponent::changeAudioDriver() {
     int id = audioDrivers.getSelectedId() - 1;
-    mainDeviceManager.setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
+    mainDeviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
 }
 
 void MainComponent::ScanCurrentDriver() {
-    auto* deviceType = mainDeviceManager.getCurrentDeviceTypeObject();
+    auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
 
     if (!deviceType) {
         DBG("Error: No valid device type found.");
@@ -85,11 +106,16 @@ void MainComponent::ScanCurrentDriver() {
             if (inputDevices.back()->channels[inChannel]) {  // Ensure valid pointer
                 x = inputDevices.back()->channels[inChannel]->getXCoord();
                 y = inputDevices.back()->channels[inChannel]->getYCoord();
-                inputDevices.back()->channels[inChannel]->setBounds(x, y, 100, 200);
-                outputGraph.addNode(std::move(inputDevices.back()->channels[inChannel]));
-                
+                // inputDevices.back()->channels[inChannel]->setBounds(x, y, 100, 200);
+
+                outputGraph->addNode(std::move(inputDevices.back()->channels[inChannel]));
+
             }
         }
+        addAndMakeVisible(*inputDevices.back());
+        mainFlexBox.items.add(juce::FlexItem(*inputDevices.back()).withMinHeight(200.0f).withMinWidth(600.0f));
+
+        
     }
 }
 
@@ -97,11 +123,16 @@ void MainComponent::resized() {
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
 
-    for (int ind = 0; ind < channels.size(); ind++) {
-        int x = channels[ind]->getXCoord();
-        int y = channels[ind]->getYCoord();
-        channels[ind]->setBounds(x, y, 200, 100);
-    }
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 50, 1000, 600);
+
+    mainFlexBox.flexWrap = juce::FlexBox::Wrap::noWrap;
+    mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
+    mainFlexBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    mainFlexBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+
+    mainFlexBox.performLayout(fbRect);
+
+   
 
     //int channelWidth = 75;
     //for (int i = 0; i < channels.size(); i++) {
