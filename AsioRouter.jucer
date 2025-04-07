@@ -5,6 +5,18 @@
               headerPath="&quot;C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\&quot;">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{8BC91170-A716-BC10-1847-94125E91A01D}" name="Source">
+      <FILE id="AmQA0p" name="VerticalMeter.cpp" compile="1" resource="0"
+            file="Source/VerticalMeter.cpp"/>
+      <FILE id="kwOTez" name="AudioInputDevice.cpp" compile="1" resource="0"
+            file="Source/AudioInputDevice.cpp"/>
+      <FILE id="d0YTKJ" name="AudioInputDevice.h" compile="0" resource="0"
+            file="Source/AudioInputDevice.h"/>
+      <FILE id="MtZvHH" name="MainMixer.cpp" compile="1" resource="0" file="Source/MainMixer.cpp"/>
+      <FILE id="jx9GT8" name="MainMixer.h" compile="0" resource="0" file="Source/MainMixer.h"/>
+      <FILE id="pYKSyF" name="Menu.cpp" compile="1" resource="0" file="Source/Menu.cpp"/>
+      <FILE id="a3LKY5" name="Menu.h" compile="0" resource="0" file="Source/Menu.h"/>
+      <FILE id="CjACfA" name="RouterHeader.h" compile="0" resource="0" file="Source/RouterHeader.h"/>
+      <FILE id="GVOcDu" name="VerticalMeter.h" compile="0" resource="0" file="Source/VerticalMeter.h"/>
       <FILE id="LrVVUs" name="Channel.cpp" compile="1" resource="0" file="Source/Channel.cpp"/>
       <FILE id="kSXsk9" name="Channel.h" compile="0" resource="0" file="Source/Channel.h"/>
       <FILE id="O0ugCg" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

@@ -700,6 +700,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\VerticalMeter.cpp">
+      <Filter>AsioRouter\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AudioInputDevice.cpp">
+      <Filter>AsioRouter\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MainMixer.cpp">
+      <Filter>AsioRouter\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Menu.cpp">
+      <Filter>AsioRouter\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Channel.cpp">
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
@@ -3708,6 +3720,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AudioInputDevice.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MainMixer.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Menu.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RouterHeader.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\VerticalMeter.h">
+      <Filter>AsioRouter\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Channel.h">
       <Filter>AsioRouter\Source</Filter>
     </ClInclude>

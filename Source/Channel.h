@@ -1,7 +1,9 @@
 #pragma once
+#include "RouterHeader.h"
+#include "VerticalMeter.h"
 #include <JuceHeader.h>
 
-class Channel : public juce::Component, public juce::Slider::Listener, public juce::AudioProcessor
+class Channel : public juce::Component, public juce::Slider::Listener, public juce::AudioProcessor, private juce::Timer
 {
 public:
 	Channel(int index, int deviceIndex, juce::String name);
@@ -26,6 +28,8 @@ public:
 	void releaseResources() override;
 
 	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+
+	void timerCallback() override;
 
 	double getTailLengthSeconds() const override;
 
@@ -59,6 +63,11 @@ private:
 	juce::Slider volumeSlider;
 	juce::Label volumeLabel;
 	float volume;
+
+	float rmsLevel;
+	std::atomic<float> level{ 0.0f };
+
+	VerticalMeter verticalMeter;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Channel);
 };

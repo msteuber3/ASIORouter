@@ -16,7 +16,7 @@ AudioInputDevice::~AudioInputDevice()
 void AudioInputDevice::createGuiElements()
 {
     sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 200);
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, DEVICE_CONTAINER_WIDTH, 200);
     sliderBox.performLayout(fbRect);
 }
 
@@ -65,7 +65,7 @@ int AudioInputDevice::createChannels(juce::Component* mainComponent)
         
         addAndMakeVisible(*channel);
         
-        sliderBox.items.add(juce::FlexItem(*channel).withMinWidth(100.0f).withMinHeight(200.0f));
+        sliderBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
 
         channels.push_back(std::move(channel));
     }
@@ -74,7 +74,7 @@ int AudioInputDevice::createChannels(juce::Component* mainComponent)
 
 void AudioInputDevice::resized()
 {
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 200);
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, DEVICE_CONTAINER_WIDTH, 200);
 
     sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap; 
     sliderBox.flexDirection = juce::FlexBox::Direction::row;

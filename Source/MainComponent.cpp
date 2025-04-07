@@ -70,7 +70,8 @@ void MainComponent::createGuiElements() {
     }
     audioDrivers.onChange = [this] { changeAudioDriver(); };
     audioDrivers.setSelectedId(1);
-    ScanCurrentDriver();
+    auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
+    mixer = std::make_unique<MainMixer>(deviceType);
 
 }
 
@@ -79,67 +80,21 @@ void MainComponent::changeAudioDriver() {
     mainDeviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
 }
 
-void MainComponent::ScanCurrentDriver() {
-    auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
-
-    if (!deviceType) {
-        DBG("Error: No valid device type found.");
-        return;
-    }
-    int x;
-    int y;
-    deviceType->scanForDevices();
-    inDeviceNames = deviceType->getDeviceNames(true);
-    outDeviceNames = deviceType->getDeviceNames(false);
-	int ind = 0;
-    for (const juce::String& name : inDeviceNames) {
-        // Create input device
-        auto inDevice = std::make_unique<AudioInputDevice>(name, name, deviceType, ind);
-        int maxIn = inDevice->createChannels(this);
-
-        // Move unique_ptr into vector
-        inputDevices.push_back(std::move(inDevice));
-        ind++;
-
-        // Add channels to the graph
-        for (int inChannel = 0; inChannel < maxIn; inChannel++) {
-            if (inputDevices.back()->channels[inChannel]) {  // Ensure valid pointer
-                x = inputDevices.back()->channels[inChannel]->getXCoord();
-                y = inputDevices.back()->channels[inChannel]->getYCoord();
-                // inputDevices.back()->channels[inChannel]->setBounds(x, y, 100, 200);
-
-                outputGraph->addNode(std::move(inputDevices.back()->channels[inChannel]));
-
-            }
-        }
-        addAndMakeVisible(*inputDevices.back());
-        mainFlexBox.items.add(juce::FlexItem(*inputDevices.back()).withMinHeight(200.0f).withMinWidth(600.0f));
-
-        
-    }
-}
-
 void MainComponent::resized() {
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
 
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 50, 1000, 600);
+    addAndMakeVisible(*mixer);
+    mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(1000).withMinHeight(800));
+
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 800);
 
     mainFlexBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
+    mainFlexBox.flexDirection = juce::FlexBox::Direction::row;
     mainFlexBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
     mainFlexBox.alignContent = juce::FlexBox::AlignContent::flexStart;
 
     mainFlexBox.performLayout(fbRect);
-
-   
-
-    //int channelWidth = 75;
-    //for (int i = 0; i < channels.size(); i++) {
-    //    channels[i]->setBounds(i * channelWidth, 0, channelWidth, 300);
-   // }
-//    audioSetting->setBounds(10, 300, 300, 400);
-
 }
 
 void MainComponent::initializeMenu() {}

@@ -8,7 +8,6 @@
 
 #include <JuceHeader.h>
 #include "MainComponent.h"
-#include "MainAudioComponent.h"
 
 //==============================================================================
 class AsioRouterApplication  : public juce::JUCEApplication

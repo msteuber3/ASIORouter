@@ -5,7 +5,9 @@ Channel::Channel(int index, int deviceIndex, juce::String name)
 	: juce::AudioProcessor(), juce::Slider::Listener(), juce::Component(), index(index), deviceIndex(deviceIndex)
 {
 	createSlider(name);
-	setSize(200, 200);
+	addAndMakeVisible(verticalMeter);
+	setSize(SLIDER_WIDTH, 200);
+	startTimerHz(24);
 }
 
 Channel::~Channel() 
@@ -55,8 +57,12 @@ void Channel::resized()
 	//int sliderWidth = 75; 
 	//auto area = juce::Rectangle(xPos, yPos, 100, 200);
 	//
-	volumeLabel.setBounds(0, 0, 100, 50);
-	volumeSlider.setBounds(0, 50, 100, 150);
+	volumeLabel.setBounds(0, 0, SLIDER_WIDTH, 50);
+	volumeSlider.setBounds(0, 50, SLIDER_WIDTH, 150);
+
+	auto meterWidth = SLIDER_WIDTH / 5;
+	verticalMeter.setBounds((SLIDER_WIDTH / 2) - (meterWidth / 2), 50, meterWidth, 150);
+	verticalMeter.toBack();
 	//	area.getWidth(),
 	//	area.getHeight() - volumeLabel.getHeight());
 	//toFront(false);
@@ -80,7 +86,13 @@ void Channel::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& m
 	for (int sample = 0; sample < buffer.getNumSamples(); sample++) {
 		channelData[sample] *= volume;
 	}
+	rmsLevel = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
 
+}
+
+void Channel::timerCallback() {
+	verticalMeter.setLevel(rmsLevel);
+	verticalMeter.repaint();
 }
 
 void Channel::releaseResources()

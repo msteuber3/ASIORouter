@@ -1,15 +1,20 @@
 #pragma once
+#include "AudioInputDevice.h"
 #include <JuceHeader.h>
 
-class MainMixer : public juce::MixerAudioSource, public juce::AudioIODeviceCallback
+class MainMixer : public juce::Component
 {
 public:
-	MainMixer(juce::AudioDeviceManager& mixerManager);
+	MainMixer(juce::AudioIODeviceType* deviceType);
 	~MainMixer();
 
-	void audioDeviceIOCallbackWithContext(const float* const * inputChannelData, int numInputChannels,
-		float* const * outputChannelData, int numOutputChannels,
-		int numSamples, const juce::AudioIODeviceCallbackContext& context) override;
+	void ScanCurrentDriver();
+
+	void resized() override;
+
+	//void audioDeviceIOCallbackWithContext(const float* const * inputChannelData, int numInputChannels,
+	//	float* const * outputChannelData, int numOutputChannels,
+	//	int numSamples, const juce::AudioIODeviceCallbackContext& context) override;
 
 	void InitializeInputDevices();
 
@@ -17,7 +22,12 @@ public:
 
 
 private:
+	juce::FlexBox mixerBox;
 	std::vector<std::unique_ptr<juce::AudioSource>> inputSourceList;
-//	juce::AudioDeviceManager &mixerDeviceManager;
-	juce::MixerAudioSource mixer;
+	juce::AudioIODeviceType* deviceType;
+	juce::StringArray inDeviceNames;
+	juce::StringArray outDeviceNames;
+	std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
+	std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
+
 };

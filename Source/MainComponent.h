@@ -1,8 +1,9 @@
 #pragma once
 
+#include "MainMixer.h"
+#include "RouterHeader.h"
 #include <JuceHeader.h>
-#include "Channel.h"
-#include "AudioInputDevice.h"
+
 
 
 class MainComponent  : public juce::Component
@@ -20,8 +21,6 @@ public:
 private:
     void changeAudioDriver();
 
-    void ScanCurrentDriver();
-
     void initializeMenu();
 
     juce::FlexBox mainFlexBox;
@@ -38,7 +37,8 @@ private:
     std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
 
     std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
- 
+    std::unique_ptr<MainMixer> mixer;
+    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
