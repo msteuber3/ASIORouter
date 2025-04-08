@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="GTeREr" name="AsioRouter" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1"
-              headerPath="&quot;C:\Users\Michael\Programming\JUCE\modules\juce_audio_devices\ASIOHeaders\&quot;">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{EBA70CA8-4366-8D16-0F41-57759F9FED7A}" name="Headers">
       <FILE id="h4EaMw" name="AudioInputDevice.h" compile="0" resource="0"

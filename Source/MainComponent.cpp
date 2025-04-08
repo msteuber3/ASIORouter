@@ -35,7 +35,7 @@
 * I also need a lookandfeel class
 * 
 */
-MainComponent::MainComponent() : Component()
+MainComponent::MainComponent() : Component(), deviceManager(dynamic_cast<AsioRouterApplication*>(juce::JUCEApplication::getInstance())
 {
     mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
     mainDeviceManager->initialise(20, 2, nullptr, true);
