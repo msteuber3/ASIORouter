@@ -7,7 +7,7 @@
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
+#include <MainComponent.h>
 
 //==============================================================================
 class AsioRouterApplication  : public juce::JUCEApplication

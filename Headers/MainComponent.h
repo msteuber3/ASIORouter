@@ -2,6 +2,7 @@
 
 #include "MainMixer.h"
 #include "RouterHeader.h"
+#include "MenuBar.h"
 #include <JuceHeader.h>
 
 
@@ -33,6 +34,8 @@ private:
     juce::StringArray inDeviceNames;
     juce::StringArray outDeviceNames;
 
+    MenuBar menuModel;
+    std::unique_ptr<juce::MenuBarComponent> menuBar;
 
     std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
 

@@ -1,4 +1,4 @@
-#include "MainMixer.h"
+#include <MainMixer.h>
 
 // Device manager -> audioIOdevice -> send data to mixer
 

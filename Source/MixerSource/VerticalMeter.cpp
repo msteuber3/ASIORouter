@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "VerticalMeter.h"
+#include <VerticalMeter.h>
 
 VerticalMeter::VerticalMeter() : Component() {}
 
@@ -25,7 +25,7 @@ void VerticalMeter::paint(juce::Graphics& g)
 
     const auto scaledX = juce::jmap(level, -60.0f, +6.f, 0.f, static_cast<float>(getWidth()));
 
-    g.fillRoundedRectangle(bounds.removeFromLeft(scaledX), 5.f);
+    g.fillRoundedRectangle(bounds.removeFromTop(scaledX), 5.f);
 
 }
 

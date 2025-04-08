@@ -2,6 +2,15 @@
 
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="AsioRouter\Headers">
+      <UniqueIdentifier>{7A6EB833-DB05-2DEE-AE40-3EE81A9D3AF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AsioRouter\Source\MenuBarSource">
+      <UniqueIdentifier>{52522006-76A5-CB0F-41AB-3C62F7DF7988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AsioRouter\Source\MixerSource">
+      <UniqueIdentifier>{73416378-062A-4730-2495-DA5BEED5B569}</UniqueIdentifier>
+    </Filter>
     <Filter Include="AsioRouter\Source">
       <UniqueIdentifier>{73BAA529-E54E-B826-3B65-5AF8D1621564}</UniqueIdentifier>
     </Filter>
@@ -700,20 +709,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\VerticalMeter.cpp">
-      <Filter>AsioRouter\Source</Filter>
+    <ClCompile Include="..\..\Source\MenuBarSource\Menu.cpp">
+      <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\AudioInputDevice.cpp">
-      <Filter>AsioRouter\Source</Filter>
+    <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp">
+      <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\MainMixer.cpp">
-      <Filter>AsioRouter\Source</Filter>
+    <ClCompile Include="..\..\Source\MenuBarSource\PropertiesComponent.cpp">
+      <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Menu.cpp">
-      <Filter>AsioRouter\Source</Filter>
+    <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp">
+      <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Channel.cpp">
-      <Filter>AsioRouter\Source</Filter>
+    <ClCompile Include="..\..\Source\MixerSource\AudioInputDevice.cpp">
+      <Filter>AsioRouter\Source\MixerSource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MixerSource\Channel.cpp">
+      <Filter>AsioRouter\Source\MixerSource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MixerSource\MainMixer.cpp">
+      <Filter>AsioRouter\Source\MixerSource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MixerSource\VerticalMeter.cpp">
+      <Filter>AsioRouter\Source\MixerSource</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>AsioRouter\Source</Filter>
@@ -3720,26 +3738,35 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\AudioInputDevice.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\AudioInputDevice.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MainMixer.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\Channel.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Menu.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\MainComponent.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\RouterHeader.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\MainMixer.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\VerticalMeter.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\Menu.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Channel.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\MenuBar.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MainComponent.h">
-      <Filter>AsioRouter\Source</Filter>
+    <ClInclude Include="..\..\Headers\PropertiesComponent.h">
+      <Filter>AsioRouter\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Headers\PropertiesWindow.h">
+      <Filter>AsioRouter\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Headers\RouterHeader.h">
+      <Filter>AsioRouter\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Headers\VerticalMeter.h">
+      <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>

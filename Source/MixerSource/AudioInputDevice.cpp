@@ -1,4 +1,4 @@
-#include "AudioInputDevice.h"
+#include <AudioInputDevice.h>
 
 AudioInputDevice::AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd)
 	: Component(), inDeviceName(inDevice), outDeviceName(outDevice), deviceType(deviceType), deviceIndex(deviceInd), inputDevice(deviceType->createDevice(inDevice, outDevice))

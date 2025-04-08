@@ -1,6 +1,6 @@
 //TODO: universal in&out min/max
 
-#include "MainComponent.h"
+#include <MainComponent.h>
 
 
 // So MainComponent will inherit from component. 
@@ -35,7 +35,7 @@
 * I also need a lookandfeel class
 * 
 */
-MainComponent::MainComponent()  : Component()
+MainComponent::MainComponent() : Component()
 {
     mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
     mainDeviceManager->initialise(20, 2, nullptr, true);
@@ -60,16 +60,22 @@ MainComponent::~MainComponent()
 }
 
 void MainComponent::createGuiElements() {
+
+    menuBar.reset(new juce::MenuBarComponent(&menuModel));
+    addAndMakeVisible(*menuBar);
+
     juce::Label deviceTypeLabel{ {}, "Select audio driver" };
     juce::Font textFont{ 12.0f };
     deviceTypeLabel.setFont(textFont);
     addAndMakeVisible(deviceTypeLabel);
     addAndMakeVisible(audioDrivers);
+    //mainFlexBox.items.add(juce::FlexItem(deviceTypeLabel).withMinWidth(20).withMinHeight(10));
     for (size_t i = 0; i < deviceTypes.size(); i++) {
         audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
     }
     audioDrivers.onChange = [this] { changeAudioDriver(); };
     audioDrivers.setSelectedId(1);
+    mainFlexBox.items.add(juce::FlexItem(audioDrivers).withMinWidth(100).withMinHeight(40));
     auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
     mixer = std::make_unique<MainMixer>(deviceType);
 
@@ -82,12 +88,12 @@ void MainComponent::changeAudioDriver() {
 
 void MainComponent::resized() {
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
-    audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
-
+    //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
+    menuBar->setBounds(0, 0, getWidth(), 25);
     addAndMakeVisible(*mixer);
     mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(1000).withMinHeight(800));
 
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, 1000, 800);
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 25, 1000, 800);
 
     mainFlexBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     mainFlexBox.flexDirection = juce::FlexBox::Direction::row;
