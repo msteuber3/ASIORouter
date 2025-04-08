@@ -1,11 +1,9 @@
 #pragma once
 
-#include "MainMixer.h"
-#include "RouterHeader.h"
-#include "MenuBar.h"
+#include <MainMixer.h>
+#include <RouterHeader.h>
+#include <MenuBar.h>
 #include <JuceHeader.h>
-
-
 
 class MainComponent  : public juce::Component
 {
@@ -26,8 +24,6 @@ private:
 
     juce::FlexBox mainFlexBox;
     
-    juce::AudioDeviceManager& deviceManager;
-
     std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSetting;
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
     juce::ComboBox audioDrivers;

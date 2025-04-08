@@ -35,11 +35,13 @@
 * I also need a lookandfeel class
 * 
 */
-MainComponent::MainComponent() : Component(), deviceManager(dynamic_cast<AsioRouterApplication*>(juce::JUCEApplication::getInstance())
+MainComponent::MainComponent() : Component()
 {
-    mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
-    mainDeviceManager->initialise(20, 2, nullptr, true);
-    mainDeviceManager->createAudioDeviceTypes(deviceTypes);
+    //mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
+    //mainDeviceManager->initialise(20, 2, nullptr, true);
+    deviceManager = new juce::AudioDeviceManager();
+    deviceManager->initialise(20, 2, nullptr, true);
+    deviceManager->createAudioDeviceTypes(deviceTypes);
 
     outputGraph = std::make_unique<juce::AudioProcessorGraph>();
 
@@ -53,9 +55,8 @@ MainComponent::~MainComponent()
 {
     outputGraph->clear();
     inputDevices.clear();
-    mainDeviceManager->removeAllChangeListeners();
-    mainDeviceManager->closeAudioDevice();
-    mainDeviceManager.reset();
+    deviceManager->removeAllChangeListeners();
+    deviceManager->closeAudioDevice();
     removeAllChildren();
 }
 
@@ -70,20 +71,20 @@ void MainComponent::createGuiElements() {
     addAndMakeVisible(deviceTypeLabel);
     addAndMakeVisible(audioDrivers);
     //mainFlexBox.items.add(juce::FlexItem(deviceTypeLabel).withMinWidth(20).withMinHeight(10));
-    for (size_t i = 0; i < deviceTypes.size(); i++) {
+    for (int i = 0; i < deviceTypes.size(); i++) {
         audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
     }
     audioDrivers.onChange = [this] { changeAudioDriver(); };
     audioDrivers.setSelectedId(1);
     mainFlexBox.items.add(juce::FlexItem(audioDrivers).withMinWidth(100).withMinHeight(40));
-    auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
+    auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
     mixer = std::make_unique<MainMixer>(deviceType);
 
 }
 
 void MainComponent::changeAudioDriver() {
     int id = audioDrivers.getSelectedId() - 1;
-    mainDeviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
+    deviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
 }
 
 void MainComponent::resized() {

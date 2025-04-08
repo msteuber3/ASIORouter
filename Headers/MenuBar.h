@@ -1,7 +1,6 @@
 #pragma once
-
 #include <JuceHeader.h>
-#include "PropertiesWindow.h"
+#include <PropertiesWindow.h>
 
 class MenuBar : public juce::MenuBarModel {
 public:

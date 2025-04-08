@@ -5,9 +5,6 @@
 
   ==============================================================================
 */
-
-#include <JuceHeader.h>
-#include <MainComponent.h>
 #include <AsioRouterApplication.h>
 
 
@@ -23,13 +20,9 @@ bool AsioRouterApplication::moreThanOneInstanceAllowed()
 juce::JUCEApplication* AsioRouterApplication::getApp()
     { return juce::JUCEApplication::getInstance(); }
 
-
-juce::AudioDeviceManager& AsioRouterApplication::getAudioDeviceManager()
-    { return deviceManager; };
     //==============================================================================
 void AsioRouterApplication::initialise (const juce::String& commandLine)
     {
-        deviceManager.initialise(20, 2, nullptr, true);
         mainWindow.reset (new MainWindow (getApplicationName()));
     }
 
@@ -46,7 +39,24 @@ void AsioRouterApplication::systemRequestedQuit()
 
 void AsioRouterApplication::anotherInstanceStarted (const juce::String& commandLine) {}
 
-    
+AsioRouterApplication::MainWindow::MainWindow (juce::String name)
+    : DocumentWindow (name,
+                      juce::Desktop::getInstance().getDefaultLookAndFeel()
+                                                  .findColour (juce::ResizableWindow::backgroundColourId),
+                      DocumentWindow::allButtons)
+{
+    setUsingNativeTitleBar (true);
+    setContentOwned (new MainComponent(), true);
+
+   #if JUCE_IOS || JUCE_ANDROID
+    setFullScreen (true);
+   #else
+    setResizable (true, true);
+    centreWithSize (getWidth(), getHeight());
+   #endif
+
+    setVisible (true);
+}
 
 //==============================================================================
 // This macro generates the main() routine that launches the app.

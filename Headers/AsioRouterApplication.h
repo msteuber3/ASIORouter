@@ -4,8 +4,9 @@
 //
 //  Created by Michael Steuber on 4/8/25.
 //
-
+#pragma once
 #include <JuceHeader.h>
+#include <MainComponent.h>
 
 class AsioRouterApplication : public juce::JUCEApplication
 {
@@ -20,10 +21,7 @@ public:
     void shutdown() override;
     
     static JUCEApplication* getApp();
-    
-    // Audio device manager accessor
-    juce::AudioDeviceManager& getAudioDeviceManager();
-    
+        
     void anotherInstanceStarted (const juce::String& commandLine) override;
     
     void systemRequestedQuit() override;
@@ -31,24 +29,8 @@ public:
     class MainWindow    : public juce::DocumentWindow
     {
     public:
-        MainWindow (juce::String name)
-            : DocumentWindow (name,
-                              juce::Desktop::getInstance().getDefaultLookAndFeel()
-                                                          .findColour (juce::ResizableWindow::backgroundColourId),
-                              DocumentWindow::allButtons)
-        {
-            setUsingNativeTitleBar (true);
-            setContentOwned (new MainComponent(), true);
-
-           #if JUCE_IOS || JUCE_ANDROID
-            setFullScreen (true);
-           #else
-            setResizable (true, true);
-            centreWithSize (getWidth(), getHeight());
-           #endif
-
-            setVisible (true);
-        }
+        MainWindow (juce::String name);
+           
 
         void closeButtonPressed() override
         {
@@ -71,5 +53,4 @@ public:
 
 private:
     std::unique_ptr<MainWindow> mainWindow;
-    juce::AudioDeviceManager deviceManager;
 };

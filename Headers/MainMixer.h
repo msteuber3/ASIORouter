@@ -1,5 +1,5 @@
 #pragma once
-#include "AudioInputDevice.h"
+#include <AudioInputDevice.h>
 #include <JuceHeader.h>
 
 class MainMixer : public juce::Component

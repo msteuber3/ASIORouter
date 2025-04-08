@@ -1,5 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
+#include <RouterHeader.h>
 
 class PropertiesComponent : public juce::Component
 {
@@ -17,7 +18,6 @@ private:
 
     juce::ComboBox audioDrivers;
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-
     
 };
 

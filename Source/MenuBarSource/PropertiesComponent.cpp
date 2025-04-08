@@ -20,14 +20,13 @@ void PropertiesComponent::generateDriverDropdown(){
     }
     audioDrivers.onChange = [this] { changeAudioDriver(); };
     audioDrivers.setSelectedId(1);
-    mainFlexBox.items.add(juce::FlexItem(audioDrivers).withMinWidth(100).withMinHeight(40));
-    auto* deviceType = mainDeviceManager->getCurrentDeviceTypeObject();
+    auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
 }
 
 void PropertiesComponent::changeAudioDriver() {
     int id = audioDrivers.getSelectedId() - 1;
-    this->getParentComponent()->getParentComponent()
-    mainDeviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
+
+    deviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
 }
 
 void PropertiesComponent::resized()

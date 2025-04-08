@@ -1,7 +1,6 @@
 #pragma once
 #include <MenuBar.h>
 
-
 MenuBar::MenuBar() : juce::MenuBarModel()
 {}
 MenuBar::~MenuBar() {}

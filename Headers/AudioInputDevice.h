@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Channel.h"
+#include <Channel.h>
 #include <JuceHeader.h>
 
 // I know I want to recieve an IO device from the main component and extract it's channels and put those channels in a 
