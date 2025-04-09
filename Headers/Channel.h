@@ -3,7 +3,7 @@
 #include "VerticalMeter.h"
 #include <JuceHeader.h>
 
-class Channel : public juce::Component, public juce::Slider::Listener, public juce::AudioProcessor, private juce::Timer
+class Channel : public juce::Component, public juce::Slider::Listener, private juce::Timer
 {
 public:
 	Channel(int index, int deviceIndex, juce::String name);
@@ -19,43 +19,13 @@ public:
 
 	void resized() override;
 
-	void setBus();
-
 	//
 
-	const juce::String getName() const override;
+	void process(float* channelData, int numSamples);
 
-	void prepareToPlay(double sampleRate, int maximumExpectedSamplesPerBlock) override;
-
-	void releaseResources() override;
-
-	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override;
+	void setRMSLevel(float rmsLevel);
 
 	void timerCallback() override;
-
-	double getTailLengthSeconds() const override;
-
-	bool acceptsMidi() const override;
-
-	bool producesMidi() const override;
-
-	juce::AudioProcessorEditor* createEditor() override;
-
-	bool hasEditor() const override;
-
-	int getNumPrograms() override;
-
-	int getCurrentProgram() override;
-
-	void setCurrentProgram(int index) override;
-
-	const juce::String getProgramName(int index) override;
-
-	void changeProgramName(int index, const juce::String& newName) override;
-
-	void getStateInformation(juce::MemoryBlock& destData) override;
-
-	void setStateInformation(const void* data, int sizeInBytes) override;
 
 	//
 
@@ -66,8 +36,9 @@ private:
 	juce::Label volumeLabel;
 	float volume;
 
-	float rmsLevel;
-	std::atomic<float> level{ 0.0f };
+	float rmsLevelSnapshot;
+
+	float levelSnapshot;
 
 	VerticalMeter verticalMeter;
 

@@ -3738,9 +3738,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Headers\AsioRouterApplication.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Headers\AudioInputDevice.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>

@@ -59,7 +59,6 @@
 		0546AF88EC06DD5CF33311FB /* RecentFilesMenuTemplate.nib */ /* RecentFilesMenuTemplate.nib */ = {isa = PBXFileReference; lastKnownFileType = file.nib; name = RecentFilesMenuTemplate.nib; path = RecentFilesMenuTemplate.nib; sourceTree = SOURCE_ROOT; };
 		097FCFC0B63CA2CAC34BDB35 /* include_juce_graphics_Harfbuzz.cpp */ /* include_juce_graphics_Harfbuzz.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_graphics_Harfbuzz.cpp; path = ../../JuceLibraryCode/include_juce_graphics_Harfbuzz.cpp; sourceTree = SOURCE_ROOT; };
 		0BCFA7AD19800583B4DB8EA4 /* include_juce_events.mm */ /* include_juce_events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_events.mm; path = ../../JuceLibraryCode/include_juce_events.mm; sourceTree = SOURCE_ROOT; };
-		10A747EC7C957928F9499666 /* AsioRouterApplication.h */ /* AsioRouterApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AsioRouterApplication.h; path = ../../Headers/AsioRouterApplication.h; sourceTree = SOURCE_ROOT; };
 		13491457C014205D73BA81BF /* juce_audio_basics */ /* juce_audio_basics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_basics; path = "~/JUCE/modules/juce_audio_basics"; sourceTree = "<absolute>"; };
 		1420513DC0BA96ED5D3EB039 /* CoreAudio.framework */ /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		16762F635EEB8E6E7C936557 /* Channel.cpp */ /* Channel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Channel.cpp; path = ../../Source/MixerSource/Channel.cpp; sourceTree = SOURCE_ROOT; };
@@ -218,7 +217,6 @@
 		76669B0DAE565C1C57751114 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				10A747EC7C957928F9499666,
 				8CF4C3B5B9379E5575F78C19,
 				838DA08356A75D624D45F76D,
 				72A56ADD4BEE454F8BF62999,

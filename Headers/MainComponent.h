@@ -11,6 +11,8 @@ public:
     MainComponent();
     ~MainComponent() override;
 
+    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> MainComponent::setBusesProperties(bool input);
+
     // To this, add the following (maybe): AudioProcessorGraph of InputDevice channel nodes
     
     void resized() override;
@@ -34,6 +36,8 @@ private:
     std::unique_ptr<MainMixer> mixer;
     
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
+
+    juce::AudioProcessorPlayer processorPlayer;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

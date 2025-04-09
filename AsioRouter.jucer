@@ -4,8 +4,6 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{EBA70CA8-4366-8D16-0F41-57759F9FED7A}" name="Headers">
-      <FILE id="DS1HGs" name="AsioRouterApplication.h" compile="0" resource="0"
-            file="Headers/AsioRouterApplication.h"/>
       <FILE id="h4EaMw" name="AudioInputDevice.h" compile="0" resource="0"
             file="Headers/AudioInputDevice.h"/>
       <FILE id="MU9laJ" name="Channel.h" compile="0" resource="0" file="Headers/Channel.h"/>

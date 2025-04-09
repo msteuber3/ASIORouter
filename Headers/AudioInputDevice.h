@@ -10,7 +10,7 @@
 class AudioInputDevice : public juce::Component
 {
 public:
-	AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd);
+	AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd, bool isInput);
 	~AudioInputDevice();
 
 	void createGuiElements();
@@ -28,11 +28,16 @@ private:
 	juce::String inDeviceName;
 	juce::String outDeviceName;
 
-	std::unique_ptr<juce::AudioIODevice> inputDevice;
+	juce::Label deviceLabel;
 
+	std::unique_ptr<juce::AudioIODevice> inputDevice;
+	juce::Component sliderComponent;
 	juce::FlexBox sliderBox;
+	juce::FlexBox deviceBox;
 
 	int deviceIndex;
+
+	bool isInput;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioInputDevice);
 

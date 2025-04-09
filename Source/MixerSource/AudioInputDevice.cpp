@@ -1,8 +1,11 @@
 #include <AudioInputDevice.h>
 
-AudioInputDevice::AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd)
-	: Component(), inDeviceName(inDevice), outDeviceName(outDevice), deviceType(deviceType), deviceIndex(deviceInd), inputDevice(deviceType->createDevice(inDevice, outDevice))
+AudioInputDevice::AudioInputDevice(const juce::String& inDevice, const juce::String& outDevice, juce::AudioIODeviceType* deviceType, int deviceInd, bool isInput)
+	: Component(), inDeviceName(inDevice), outDeviceName(outDevice), deviceType(deviceType), deviceIndex(deviceInd), inputDevice(deviceType->createDevice(inDevice, outDevice)), isInput(isInput)
 {
+    deviceLabel.setText(inDeviceName, juce::dontSendNotification);
+    deviceLabel.setJustificationType(juce::Justification::left);
+    createGuiElements();
     createInputDevice();
 }
 
@@ -15,14 +18,18 @@ AudioInputDevice::~AudioInputDevice()
 
 void AudioInputDevice::createGuiElements()
 {
-    sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, DEVICE_CONTAINER_WIDTH, 200);
-    sliderBox.performLayout(fbRect);
+   // setSize(DEVICE_CONTAINER_WIDTH, 250);
+
+    addAndMakeVisible(deviceLabel);
+    addAndMakeVisible(sliderComponent);
+
+    juce::Rectangle<int> sbRect = juce::Rectangle<int>(0, 25, DEVICE_CONTAINER_WIDTH, 200);
+    sliderComponent.setBounds(sbRect);
+   
+
 }
 
- 
-
-bool AudioInputDevice::createInputDevice()
+ bool AudioInputDevice::createInputDevice()
 {
 	//Might break with mics
     if (inputDevice == nullptr)
@@ -56,31 +63,47 @@ int AudioInputDevice::createChannels(juce::Component* mainComponent)
     auto activeInputChannels = inputDevice->getActiveInputChannels();
     auto activeOutputChannels = inputDevice->getActiveOutputChannels();
 
-    auto maxInputChannels = activeInputChannels.getHighestBit() + 1;
-    auto maxOutputChannels = activeOutputChannels.getHighestBit() + 1;
-
-    for (int i = 0; i < maxInputChannels; i++) {
-		juce::String name = inputDevice->getInputChannelNames()[i];
+    auto maxChannels = isInput ? activeInputChannels.getHighestBit() + 1 : activeOutputChannels.getHighestBit() + 1;
+    DBG("Device: " + outDeviceName);
+    for (int i = 0; i < maxChannels; i++) {
+        juce::String name = isInput ? inputDevice->getInputChannelNames()[i] : inputDevice->getOutputChannelNames()[i];
         auto channel = std::make_unique<Channel>(i, deviceIndex, name);
         
-        addAndMakeVisible(*channel);
+        sliderComponent.addAndMakeVisible(*channel);
         
         sliderBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
 
         channels.push_back(std::move(channel));
     }
-    return maxInputChannels;
+
+    return maxChannels;
 }
 
 void AudioInputDevice::resized()
 {
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, DEVICE_CONTAINER_WIDTH, 200);
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 0, DEVICE_CONTAINER_WIDTH, 250);
+    addAndMakeVisible(sliderComponent);
 
-    sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap; 
+    sliderBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     sliderBox.flexDirection = juce::FlexBox::Direction::row;
-    sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart; 
+    sliderBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
     sliderBox.alignContent = juce::FlexBox::AlignContent::flexStart;
 
-    sliderBox.performLayout(fbRect);
+    deviceBox.flexWrap = juce::FlexBox::Wrap::noWrap;
+    deviceBox.flexDirection = juce::FlexBox::Direction::column;
+    deviceBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    deviceBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+
+    deviceBox.items.add(juce::FlexItem(deviceLabel).withMinWidth(DEVICE_CONTAINER_WIDTH).withMinHeight(20));
+
+    sliderBox.performLayout(sliderComponent.getLocalBounds());
+
+    deviceBox.items.add(juce::FlexItem(sliderComponent).withMinHeight(200).withMinWidth(DEVICE_CONTAINER_WIDTH));
+
+    deviceBox.performLayout(fbRect);
+
+
+
+
 }
 

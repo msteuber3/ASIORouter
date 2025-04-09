@@ -4,4 +4,5 @@
 #define DEVICE_CONTAINER_WIDTH 300
 
 extern std::unique_ptr<juce::AudioDeviceManager> deviceManager;
+
 // Next steps: Outputz`
