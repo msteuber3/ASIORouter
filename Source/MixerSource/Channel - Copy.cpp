@@ -1,11 +1,9 @@
 #include <Channel.h>
 
-// Alternate approach: Make each channel a bus instead of a processor and let the user instantiate as many processors as they want. This way it does make a processor for each track. 
-// Make one global processor(?) and route all audio through that (???) I just dont know if you can chain specific in channels to specific out channels
+
 Channel::Channel(int index, int deviceIndex, juce::String name)
-	: juce::AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true).withOutput("Output", juce::AudioChannelSet::stereo(), true)), juce::Slider::Listener(), juce::Component(), index(index), deviceIndex(deviceIndex)
+	: juce::AudioProcessor(), juce::Slider::Listener(), juce::Component(), index(index), deviceIndex(deviceIndex)
 {
-	setBus();
 	createSlider(name);
 	addAndMakeVisible(verticalMeter);
 	setSize(SLIDER_WIDTH, 200);
@@ -71,18 +69,14 @@ void Channel::resized()
 	//toFront(false);
 }
 
-void Channel::setBus()
+const juce::String Channel::getName() const
 {
-	juce::AudioDeviceManager::AudioDeviceSetup config;
-	deviceManager->getAudioDeviceSetup(config);
+	return juce::String();
+}
 
-	juce::AudioProcessor::Bus* inputBus = getBus(true, 0);
-
-
-	deviceManager->addAudioCallback(new juce::AudioProcessorPlayer());
-	static_cast<juce::AudioProcessorPlayer*>(deviceManager->getAudioCallbackList()[0])->setProcessor(this);
-
-
+void Channel::prepareToPlay(double sampleRate, int maximumExpectedSamplesPerBlock)
+{
+	juce::ignoreUnused(sampleRate, maximumExpectedSamplesPerBlock);
 }
 
 void Channel::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -95,3 +89,76 @@ void Channel::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& m
 
 }
 
+void Channel::timerCallback() {
+	verticalMeter.setLevel(rmsLevel);
+	verticalMeter.repaint();
+}
+
+void Channel::releaseResources()
+{
+}
+
+double Channel::getTailLengthSeconds() const
+{
+	return 0.0;
+}
+
+bool Channel::acceptsMidi() const
+{
+	return false;
+}
+
+bool Channel::producesMidi() const
+{
+	return false;
+}
+
+juce::AudioProcessorEditor* Channel::createEditor()
+{
+	return nullptr;
+}
+
+bool Channel::hasEditor() const
+{
+	return false;
+}
+
+int Channel::getNumPrograms()
+{
+	return 0;
+}
+
+int Channel::getCurrentProgram()
+{
+	return 0;
+}
+
+void Channel::setCurrentProgram(int index)
+{
+	juce::ignoreUnused(index);
+}
+
+const juce::String Channel::getProgramName(int index)
+{
+	return juce::String();
+}
+
+void Channel::changeProgramName(int index, const juce::String& newName)
+{
+	juce::ignoreUnused(index, newName);
+
+}
+
+void Channel::getStateInformation(juce::MemoryBlock& destData)
+{
+	juce::ignoreUnused(destData);
+
+}
+
+void Channel::setStateInformation(const void* data, int sizeInBytes)
+{
+	juce::ignoreUnused(data, sizeInBytes);
+}
+
+	//volumeLabel.setBounds(area.getX() + xPos, area.getY(), sliderWidth, 20);
+	//volumeSlider.setBounds(area.getX() + xPos, volumeLabel.getBottom(), sliderWidth, area.getHeight() - volumeLabel.getHeight());

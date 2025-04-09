@@ -3,5 +3,5 @@
 #define SLIDER_WIDTH 75
 #define DEVICE_CONTAINER_WIDTH 300
 
-extern juce::AudioDeviceManager* deviceManager;
-// Next steps: Output
+extern std::unique_ptr<juce::AudioDeviceManager> deviceManager;
+// Next steps: Outputz`

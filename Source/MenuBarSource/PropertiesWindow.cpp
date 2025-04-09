@@ -3,7 +3,7 @@
 #include <PropertiesWindow.h>
 
 PropertiesWindow::PropertiesWindow()
-    : DocumentWindow("Properties", juce::Colours::lightgrey, DocumentWindow::allButtons)
+    : DocumentWindow("Properties", juce::Colours::darkgrey, DocumentWindow::allButtons)
 {
     setUsingNativeTitleBar(true);
     setContentOwned(new PropertiesComponent(), true);

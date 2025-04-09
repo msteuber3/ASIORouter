@@ -35,14 +35,14 @@
 * I also need a lookandfeel class
 * 
 */
+std::unique_ptr<juce::AudioDeviceManager> deviceManager;
+
+
 MainComponent::MainComponent() : Component()
 {
-    //mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
-    //mainDeviceManager->initialise(20, 2, nullptr, true);
-    deviceManager = new juce::AudioDeviceManager();
+    deviceManager = std::make_unique<juce::AudioDeviceManager>();
     deviceManager->initialise(20, 2, nullptr, true);
     deviceManager->createAudioDeviceTypes(deviceTypes);
-
     outputGraph = std::make_unique<juce::AudioProcessorGraph>();
 
     createGuiElements();
@@ -57,6 +57,7 @@ MainComponent::~MainComponent()
     inputDevices.clear();
     deviceManager->removeAllChangeListeners();
     deviceManager->closeAudioDevice();
+    deviceManager.reset();
     removeAllChildren();
 }
 
@@ -65,28 +66,10 @@ void MainComponent::createGuiElements() {
     menuBar.reset(new juce::MenuBarComponent(&menuModel));
     addAndMakeVisible(*menuBar);
 
-    juce::Label deviceTypeLabel{ {}, "Select audio driver" };
-    juce::Font textFont{ 12.0f };
-    deviceTypeLabel.setFont(textFont);
-    addAndMakeVisible(deviceTypeLabel);
-    addAndMakeVisible(audioDrivers);
-    //mainFlexBox.items.add(juce::FlexItem(deviceTypeLabel).withMinWidth(20).withMinHeight(10));
-    for (int i = 0; i < deviceTypes.size(); i++) {
-        audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
-    }
-    audioDrivers.onChange = [this] { changeAudioDriver(); };
-    audioDrivers.setSelectedId(1);
-    mainFlexBox.items.add(juce::FlexItem(audioDrivers).withMinWidth(100).withMinHeight(40));
     auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
     mixer = std::make_unique<MainMixer>(deviceType);
 
 }
-
-void MainComponent::changeAudioDriver() {
-    int id = audioDrivers.getSelectedId() - 1;
-    deviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
-}
-
 void MainComponent::resized() {
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);

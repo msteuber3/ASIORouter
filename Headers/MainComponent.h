@@ -18,15 +18,10 @@ public:
     void createGuiElements();
 
 private:
-    void changeAudioDriver();
-
     void initializeMenu();
 
     juce::FlexBox mainFlexBox;
     
-    std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSetting;
-    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-    juce::ComboBox audioDrivers;
     juce::StringArray inDeviceNames;
     juce::StringArray outDeviceNames;
 
@@ -38,6 +33,8 @@ private:
     std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
     std::unique_ptr<MainMixer> mixer;
     
+    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

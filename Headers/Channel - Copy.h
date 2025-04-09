@@ -19,8 +19,6 @@ public:
 
 	void resized() override;
 
-	void setBus();
-
 	//
 
 	const juce::String getName() const override;
