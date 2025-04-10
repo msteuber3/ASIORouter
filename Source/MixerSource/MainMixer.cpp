@@ -55,7 +55,15 @@ void MainMixer::setBusOrder(
         }
         else if (std::get<0>(IOTuple).getTypeOfChannel(0) == juce::AudioChannelSet::ChannelType::left)
         {
-
+            inputs[totalChannelIndex] = std::get<1>(IOTuple) + " Input Channel 1";
+            totalChannelIndex++;
+            inputs[totalChannelIndex] = std::get<1>(IOTuple) + " Input Channel 2";
+            totalChannelIndex++;
+            deviceIndex++;
+        }
+        else if (std::get<0>(IOTuple).getTypeOfChannel(0) == juce::AudioChannelSet::ChannelType::discreteChannel0)
+        {
+            DBG("Sorry future Michael, have fun with this; I'm feeling quite lazy");
         }
     }
 

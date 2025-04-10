@@ -11,7 +11,7 @@ public:
     MainComponent();
     ~MainComponent() override;
 
-    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> MainComponent::setBusesProperties(bool input);
+    std::vector<std::tuple<juce::AudioChannelSet, juce::String>>setBusesProperties(bool input);
 
     // To this, add the following (maybe): AudioProcessorGraph of InputDevice channel nodes
     
