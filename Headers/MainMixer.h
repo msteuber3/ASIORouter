@@ -14,9 +14,14 @@ public:
 		std::vector<std::tuple<juce::AudioChannelSet, juce::String>> outputBuses);
 	~MainMixer();
 
+	void setBusOrder(std::vector<std::tuple<juce::AudioChannelSet, juce::String>> inputBuses,
+		std::vector<std::tuple<juce::AudioChannelSet, juce::String>> outputBuses);
+
 	void ScanCurrentDriver();
 
 	//void addChannelToBus(int busIndex);
+
+	std::unique_ptr<Channel> getChannelFromBusBuffer();
 
 	void resized() override;
 

@@ -11,6 +11,7 @@ MainMixer::MainMixer(juce::AudioIODeviceType* deviceType,
     juce::AudioProcessor(buildBuses(inputBuses, outputBuses)),
     deviceType(deviceType)
 {
+    setBusOrder(inputBuses, outputBuses);
     outputGraph = std::make_unique<juce::AudioProcessorGraph>();
     addAndMakeVisible(inputComponent);
     addAndMakeVisible(outputComponent);
@@ -36,6 +37,28 @@ MainMixer::~MainMixer()
 {
     outputGraph->clear();
     inputDevices.clear();
+}
+
+void MainMixer::setBusOrder(
+    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> inputBuses,
+    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> outputBuses) 
+{
+    std::map<int, juce::String> inputs;
+    int totalChannelIndex = 0;
+    int deviceIndex = 0;
+    for (std::tuple<juce::AudioChannelSet, juce::String> IOTuple : inputBuses) {
+        if (std::get<0>(IOTuple).getTypeOfChannel(0) == juce::AudioChannelSet::ChannelType::centre)
+        { 
+            inputs[totalChannelIndex] = std::get<1>(IOTuple) + " Input Channel 1"; 
+            totalChannelIndex++;
+            deviceIndex++;
+        }
+        else if (std::get<0>(IOTuple).getTypeOfChannel(0) == juce::AudioChannelSet::ChannelType::left)
+        {
+
+        }
+    }
+
 }
 
 void MainMixer::ScanCurrentDriver() {
@@ -106,6 +129,10 @@ void MainMixer::ScanCurrentDriver() {
 //    setBusesLayout(getBus(true, 0)->getBusesLayoutForLayoutChangeOfBus(layout));
 //}
 
+std::unique_ptr<Channel> MainMixer::getChannelFromBusBuffer() {
+
+}
+
 void MainMixer::resized() {
     juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 10, getLocalBounds().getWidth(), 500);
  
@@ -132,6 +159,8 @@ void MainMixer::resized() {
 
     mixerBox.performLayout(fbRect);
 }
+
+
 
 void MainMixer::InitializeInputDevices()
 {
@@ -171,9 +200,9 @@ void MainMixer::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&
         for (int channel = 0; channel < busBuffer.getNumChannels(); ++channel)
         {
             int numSamples = busBuffer.getNumSamples();
-            float* data = busBuffer.getWritePointer(bus->getChannelIndexInProcessBlockBuffer(channel));
+            float* data = busBuffer.getWritePointer(getChannelIndexInProcessBlockBuffer(true, busIndex, channel));
             inChannels[channel]->process(data, busBuffer.getNumSamples());
-            float rmsLevel = juce::Decibels::gainToDecibels(busBuffer.getRMSLevel(bus->getChannelIndexInProcessBlockBuffer(channel), 0, busBuffer.getNumSamples()));
+            float rmsLevel = juce::Decibels::gainToDecibels(busBuffer.getRMSLevel(getChannelIndexInProcessBlockBuffer(true, busIndex, channel), 0, busBuffer.getNumSamples()));
             inChannels[channel]->setRMSLevel(rmsLevel);
         }
     }
