@@ -21,7 +21,7 @@ public:
 
 	//
 
-	void process(float* channelData, int numSamples);
+	void process(const float* readPointer, float* writePointer, int numSamples);
 
 	void setRMSLevel(float rmsLevel);
 
@@ -35,6 +35,8 @@ private:
 	juce::Slider volumeSlider;
 	juce::Label volumeLabel;
 	float volume;
+
+	juce::String name;
 
 	float rmsLevelSnapshot;
 

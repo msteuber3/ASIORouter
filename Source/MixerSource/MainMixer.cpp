@@ -29,6 +29,11 @@ juce::AudioProcessor::BusesProperties MainMixer::buildBuses(
     for (std::tuple<juce::AudioChannelSet, juce::String> IOTuple : outputBuses) {
         busesProps.addBus(false, std::get<1>(IOTuple), std::get<0>(IOTuple), true);
     }
+    juce::Array<juce::AudioProcessor::BusProperties> inLay = busesProps.inputLayouts;
+    for (juce::AudioProcessor::BusProperties busit : inLay) {
+        DBG(busit.busName);
+    }
+    
     return busesProps;
 
 }
@@ -169,6 +174,21 @@ void MainMixer::ScanCurrentDriver() {
     }
 }
 
+void MainMixer::startDevices(juce::AudioIODeviceCallback* callback)
+{
+    for (int i = 0; i < inputDevices.size(); i++) {
+        bool inputDevicePlaying = inputDevices[i]->startDevice(callback);
+        if (!inputDevicePlaying) {
+            DBG("Input device " + inputDevices[i]->getName() + " failed to start");
+        }
+    }
+    for (int i = 0; i < inputDevices.size(); i++) {
+        if (inputDevices[i]->inputDevicePlaying()) {
+            DBG("Input device " + inputDevices[i]->getName() + " currently playing");
+        }
+    }
+}
+
 std::unique_ptr<Channel> MainMixer::getChannelFromBusBuffer() {
     return nullptr;
 }
@@ -218,30 +238,154 @@ const juce::String MainMixer::getName() const
 
 void MainMixer::prepareToPlay(double sampleRate, int maximumExpectedSamplesPerBlock)
 {
-    juce::ignoreUnused(sampleRate, maximumExpectedSamplesPerBlock);
+    enableAllBuses();
+    
+    DBG("prepareToPlay: Total input channels: " + juce::String(getTotalNumInputChannels()));
+    DBG("prepareToPlay: Total output channels: " + juce::String(getTotalNumOutputChannels()));
+
+    for (int i = 0; i < getBusCount(true); ++i) {
+        auto bus = getBus(true, i);
+        DBG("Input Bus " + juce::String(i) + " (" + bus->getName() +
+            ") has " + juce::String(bus->getNumberOfChannels()) + " channels, enabled: " +
+            juce::String(bus->isEnabled() ? "true" : "false"));
+    }
 }
 
 void MainMixer::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     //So the bus corresponds to the AudioInputDevice
+    buffer.setSize(getTotalNumInputChannels(), buffer.getNumSamples(), true);
+    enableAllBuses();
+    DBG("Main buffer has " + juce::String(buffer.getNumChannels()) + " channels");
+
+    // Check the channel mapping for each bus
+    for (int busIndex = 0; busIndex < getBusCount(true); busIndex++) {
+        auto bus = getBus(true, busIndex);
+        DBG("Bus " + juce::String(busIndex) + " name: " + bus->getName());
+        DBG("Channel start index: " + juce::String(getChannelIndexInProcessBlockBuffer(true, busIndex, 0)));
+        DBG("Total channels in bus: " + juce::String(bus->getNumberOfChannels()));
+    }
+
     int busCount = getBusCount(true);
+
+    const BusesLayout& layout = getBusesLayout();
+    DBG("Number of input buses: " + juce::String(getBusCount(true)));
+    for (int i = 0; i < busCount; i++) {
+        DBG(layout.getChannelSet(true, i).getDescription());
+
+    }
     for (int busIndex = 0; busIndex < busCount; busIndex++) {
         auto bus = getBus(true, busIndex);
 
-        // ISSUE: ONLY THE FIRST LOADED BUS IS GETTING CHANNELS
-        juce::AudioBuffer<float> busBuffer = bus->getBusBuffer(buffer);
+        DBG("Bus " + juce::String(busIndex) + " name: " + bus->getName() +
+            ", enabled: " + (bus->isEnabled() ? "true" : "false") +
+            ", channels: " + juce::String(bus->getNumberOfChannels()));
 
-        for (int channel = 0; channel < busBuffer.getNumChannels(); ++channel)
-        {
-            // And the channel is relative to that. SO let's auto AudioInputDevice and then access the channel by index based on that
-            int numSamples = busBuffer.getNumSamples();
-            float* data = busBuffer.getWritePointer(getChannelIndexInProcessBlockBuffer(true, busIndex, channel));
-            inputDevices[busIndex]->channels[channel]->process(data, busBuffer.getNumSamples());
-            float rmsLevel = juce::Decibels::gainToDecibels(busBuffer.getRMSLevel(getChannelIndexInProcessBlockBuffer(true, busIndex, channel), 0, busBuffer.getNumSamples()));
-            inputDevices[busIndex]->channels[channel]->setRMSLevel(rmsLevel);
+        if (!bus->isEnabled()) {
+            DBG("Bus " + juce::String(busIndex) + " is disabled - enabling now");
+            bus->enable(true);
+        }
+
+        try {
+            auto busBuffer = getBusBuffer(buffer, true, busIndex);
+
+            DBG("Bus " + juce::String(busIndex) + " buffer has " +
+                juce::String(busBuffer.getNumChannels()) + " channels");
+
+            int currentNumChannels = bus->getNumberOfChannels();
+            bool mainBus = bus->isMain();
+            bool inputDevicePlaying = inputDevices[busIndex]->inputDevicePlaying();
+            if (!inputDevicePlaying) { DBG("Input device not playing"); }
+
+            // ISSUE: ONLY THE FIRST LOADED BUS IS GETTING CHANNELS
+         //   juce::AudioBuffer<float> busBuffer = getBusBuffer(buffer, true, busIndex);
+
+            for (int channel = 0; channel < busBuffer.getNumChannels(); ++channel)
+            {
+                // And the channel is relative to that. SO let's auto AudioInputDevice and then access the channel by index based on that
+                int numSamples = buffer.getNumSamples();
+                float* writePointer = buffer.getWritePointer(channel + busIndex); // getChannelIndexInProcessBlockBuffer(true, busIndex, channel));
+                const float* readPointer = buffer.getReadPointer(channel + busIndex);
+                inputDevices[busIndex]->channels[channel]->process(readPointer, writePointer, numSamples);
+                float gain = buffer.getRMSLevel(channel + busIndex, 0, numSamples);
+                float rmsLevel = juce::Decibels::gainToDecibels(gain);
+                inputDevices[busIndex]->channels[channel]->setRMSLevel(rmsLevel);
+            }
+            busBuffer.clear();
+        }
+        catch (std::exception& e) {
+            DBG("Exception when processing bus " + juce::String(busIndex) + ": " + e.what());
         }
     }
 }
+
+//void MainMixer::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+//{
+//    //So the bus corresponds to the AudioInputDevice
+//    buffer.setSize(getTotalNumInputChannels(), buffer.getNumSamples(), true);
+//    enableAllBuses();
+//    DBG("Main buffer has " + juce::String(buffer.getNumChannels()) + " channels");
+//
+//    // Check the channel mapping for each bus
+//    for (int busIndex = 0; busIndex < getBusCount(true); busIndex++) {
+//        auto bus = getBus(true, busIndex);
+//        DBG("Bus " + juce::String(busIndex) + " name: " + bus->getName());
+//        DBG("Channel start index: " + juce::String(getChannelIndexInProcessBlockBuffer(true, busIndex, 0)));
+//        DBG("Total channels in bus: " + juce::String(bus->getNumberOfChannels()));
+//    }
+//
+//    int busCount = getBusCount(true);
+//
+//    const BusesLayout& layout = getBusesLayout();
+//    DBG("Number of input buses: " + juce::String(getBusCount(true)));
+//    for (int i = 0; i < busCount; i++) {
+//        DBG(layout.getChannelSet(true, i).getDescription());
+//
+//    }
+//    for (int busIndex = 0; busIndex < busCount; busIndex++) {
+//        auto bus = getBus(true, busIndex);
+//
+//        DBG("Bus " + juce::String(busIndex) + " name: " + bus->getName() +
+//            ", enabled: " + (bus->isEnabled() ? "true" : "false") +
+//            ", channels: " + juce::String(bus->getNumberOfChannels()));
+//
+//        if (!bus->isEnabled()) {
+//            DBG("Bus " + juce::String(busIndex) + " is disabled - enabling now");
+//            bus->enable(true);
+//        }
+//
+//        try {
+//            auto busBuffer = getBusBuffer(buffer, true, busIndex);
+//
+//            DBG("Bus " + juce::String(busIndex) + " buffer has " +
+//                juce::String(busBuffer.getNumChannels()) + " channels");
+//
+//            int currentNumChannels = bus->getNumberOfChannels();
+//            bool mainBus = bus->isMain();
+//            bool inputDevicePlaying = inputDevices[busIndex]->inputDevicePlaying();
+//            if (!inputDevicePlaying) { DBG("Input device not playing"); }
+//
+//            // ISSUE: ONLY THE FIRST LOADED BUS IS GETTING CHANNELS
+//         //   juce::AudioBuffer<float> busBuffer = getBusBuffer(buffer, true, busIndex);
+//
+//            for (int channel = 0; channel < busBuffer.getNumChannels(); ++channel)
+//            {
+//                // And the channel is relative to that. SO let's auto AudioInputDevice and then access the channel by index based on that
+//                int numSamples = busBuffer.getNumSamples();
+//                float* writePointer = busBuffer.getWritePointer(channel); // getChannelIndexInProcessBlockBuffer(true, busIndex, channel));
+//                const float* readPointer = busBuffer.getReadPointer(channel);
+//                inputDevices[busIndex]->channels[channel]->process(readPointer, writePointer, numSamples);
+//                float gain = busBuffer.getRMSLevel(channel, 0, numSamples);
+//                float rmsLevel = juce::Decibels::gainToDecibels(gain);
+//                inputDevices[busIndex]->channels[channel]->setRMSLevel(rmsLevel);
+//            }
+//            busBuffer.clear();
+//        }
+//        catch (std::exception& e) {
+//            DBG("Exception when processing bus " + juce::String(busIndex) + ": " + e.what());
+//        }
+//    }
+//}
 
 void MainMixer::releaseResources()
 {

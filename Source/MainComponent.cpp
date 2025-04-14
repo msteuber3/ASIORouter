@@ -40,10 +40,12 @@ std::unique_ptr<juce::AudioDeviceManager> deviceManager;
 MainComponent::MainComponent() : Component()
 {
     deviceManager = std::make_unique<juce::AudioDeviceManager>();
-    deviceManager->initialise(20, 20, nullptr, true);
+    //juce::AudioDeviceManager::AudioDeviceSetup deviceSetup = deviceManager->getAudioDeviceSetup();
+    //deviceSetup.bufferSize = 441;
+    deviceManager->initialise(20, 20, nullptr, true); // , juce::String(), & deviceSetup);
     deviceManager->createAudioDeviceTypes(deviceTypes);
     outputGraph = std::make_unique<juce::AudioProcessorGraph>();
-
+    //deviceManager->setAudioChannels(20, 20);
     createGuiElements();
 
 
@@ -77,7 +79,7 @@ std::vector<std::tuple<juce::AudioChannelSet, juce::String>> MainComponent::setB
         const juce::BigInteger& numInputs = deviceObject->getInputChannelNames().size();
         const juce::BigInteger& numOutputs = deviceObject->getOutputChannelNames().size();
 
-        deviceObject->open(numInputs, numOutputs, 44100, 512);
+        deviceObject->open(numInputs, numOutputs, 44100, 441);
 
         auto activeInputChannels = input ? deviceObject->getActiveInputChannels() : deviceObject->getActiveOutputChannels();
         int maxIO = activeInputChannels.getHighestBit() + 1;
@@ -99,6 +101,7 @@ void MainComponent::createGuiElements() {
 
     auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
     mixer = std::make_unique<MainMixer>(deviceType, inputBuses, outputBuses);
+    mixer->startDevices(&processorPlayer);
     processorPlayer.setProcessor(mixer.get());
     deviceManager->addAudioCallback(&processorPlayer);
 

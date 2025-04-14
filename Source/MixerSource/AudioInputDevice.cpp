@@ -40,7 +40,7 @@ void AudioInputDevice::createGuiElements()
 
     const juce::BigInteger& numInputs = inputDevice->getInputChannelNames().size();
     const juce::BigInteger& numOutputs = inputDevice->getOutputChannelNames().size();
-    if (inputDevice->open(numInputs, numOutputs, 44100, 512) != "") {
+    if (inputDevice->open(numInputs, numOutputs, 44100, 441) != "") {
         DBG("Failed to open device: " + inputDevice->getName());
         return false;
     }
@@ -105,5 +105,16 @@ void AudioInputDevice::resized()
 
 
 
+}
+
+bool AudioInputDevice::inputDevicePlaying()
+{
+    return inputDevice->isPlaying();
+}
+
+bool AudioInputDevice::startDevice(juce::AudioIODeviceCallback *callback)
+{
+    inputDevice->start(callback);
+    return inputDevice->isPlaying();
 }
 

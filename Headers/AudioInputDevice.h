@@ -21,6 +21,10 @@ public:
 
 	void resized() override;
 
+	bool inputDevicePlaying();
+
+	bool startDevice(juce::AudioIODeviceCallback *callback);
+
 	std::vector<std::unique_ptr<Channel>> channels;
 
 private:

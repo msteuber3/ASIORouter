@@ -19,6 +19,8 @@ public:
 
 	void ScanCurrentDriver();
 
+	void startDevices(juce::AudioIODeviceCallback* callback);
+
 	//void addChannelToBus(int busIndex);
 
 	std::unique_ptr<Channel> getChannelFromBusBuffer();
