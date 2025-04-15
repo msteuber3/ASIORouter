@@ -14,9 +14,9 @@ void PropertiesComponent::generateDriverDropdown(){
     juce::Font textFont{ 12.0f };
     label.setFont(textFont);
     addAndMakeVisible(label);
-    audioSettingsComp = new juce::AudioDeviceSelectorComponent{ *deviceManager, 2, 16, 2, 2, true, true, true, false };
+    audioSettingsComp = std::make_unique<juce::AudioDeviceSelectorComponent>(*deviceManager, 2, 20, 2, 20, true, true, true, true);
 
-    addAndMakeVisible(audioSettingsComp);
+    addAndMakeVisible(*audioSettingsComp);
     audioSettingsComp->setSize(getWidth(), getHeight() - 10);
 }
 

@@ -1,5 +1,5 @@
 //TODO: universal in&out min/max
-
+#pragma once
 #include <MainComponent.h>
 
 
@@ -42,7 +42,7 @@ MainComponent::MainComponent() : Component()
     initializeDeviceManager();
     createMixer();
     createGuiElements();
-    setSize(2000, 800);
+    setSize(2000, 800); //TODO: Automatically reset size to match number of devices
 
     //deviceManager->setAudioChannels(20, 20);
    // createGuiElements();
@@ -52,20 +52,20 @@ MainComponent::MainComponent() : Component()
 
 MainComponent::~MainComponent() 
 {
-   deviceManager->removeAudioCallback(mixer);
+   deviceManager->removeAudioCallback(mixer.get());
    deviceManager->removeAllChangeListeners();
    deviceManager->closeAudioDevice();
    deviceManager.reset();
+   menuBar.reset();
    removeAllChildren();
 }
 
 void MainComponent::initializeDeviceManager() {
     deviceManager = std::make_unique<juce::AudioDeviceManager>();
     
-
     deviceManager->initialise(20, 20, nullptr, true, juce::String(), nullptr);
     deviceManager->setCurrentAudioDeviceType(juce::String("ASIO"), true); //TODO: Add check here to make sure asio is installed
-    auto* setup = new juce::AudioDeviceManager::AudioDeviceSetup();
+    auto setup = std::make_unique<juce::AudioDeviceManager::AudioDeviceSetup>();
     deviceManager->getAudioDeviceSetup(*setup);
     setup->inputDeviceName = "ASIO4ALL v2";
     setup->outputDeviceName = "ASIO4ALL v2";
@@ -74,19 +74,10 @@ void MainComponent::initializeDeviceManager() {
 
 void MainComponent::createMixer()
 {
-    mixer = new MainMixer();
-    deviceManager->addAudioCallback(mixer);
+    mixer = std::make_unique<MainMixer>();
+    addAndMakeVisible(*mixer);
+    deviceManager->addAudioCallback(mixer.get());
 }
-
-void MainComponent::enableDeviceSelectorComponent()
-{
-    audioSettingsComp = new juce::AudioDeviceSelectorComponent{ *deviceManager, 2, 16, 2, 2, true, true, true, false };
-
-    addAndMakeVisible(audioSettingsComp);
-    audioSettingsComp->setSize(500, 250);
-    deviceSelectorComponentActive = true;
-}
-
 
 void MainComponent::createGuiElements() {
 
@@ -95,14 +86,21 @@ void MainComponent::createGuiElements() {
     addAndMakeVisible(*menuBar);
 
 }
+void MainComponent::resetMixer()
+{
+   // deviceManager->removeAudioCallback(mixer.get());
+   // removeChildComponent(*mixer);
+   // createMixer();
+
+}
 void MainComponent::mainComponentEventTriggered()
 {
-    mixer->resetChannelList();
+   // resetMixer();
+    //resized();
 }
 
 void MainComponent::resized() {
-    if (deviceSelectorComponentActive) { addAndMakeVisible(audioSettingsComp); }
-    addAndMakeVisible(mixer);
+    addAndMakeVisible(*mixer);
 
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);

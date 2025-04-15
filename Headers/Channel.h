@@ -1,6 +1,6 @@
 #pragma once
-#include "RouterHeader.h"
-#include "VerticalMeter.h"
+#include <RouterHeader.h>
+#include <VerticalMeter.h>
 #include <JuceHeader.h>
 
 class Channel : public juce::Component, public juce::Slider::Listener, private juce::Timer
@@ -21,7 +21,7 @@ public:
 
 	//
 
-	void process(const float* readPointer, float* writePointer, int numSamples);
+	void process(float* writePointer, int numSamples);
 
 	void setRMSLevel(float rmsLevel);
 

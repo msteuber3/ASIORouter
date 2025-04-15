@@ -145,11 +145,9 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\MenuBarSource\Menu.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesComponent.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp"/>
-    <ClCompile Include="..\..\Source\MixerSource\AudioInputDevice.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\Channel.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\MainMixer.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\VerticalMeter.cpp"/>
@@ -2976,12 +2974,10 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_gui_extra.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Headers\AudioInputDevice.h"/>
     <ClInclude Include="..\..\Headers\Channel.h"/>
     <ClInclude Include="..\..\Headers\CustomListener.h"/>
     <ClInclude Include="..\..\Headers\MainComponent.h"/>
     <ClInclude Include="..\..\Headers\MainMixer.h"/>
-    <ClInclude Include="..\..\Headers\Menu.h"/>
     <ClInclude Include="..\..\Headers\MenuBar.h"/>
     <ClInclude Include="..\..\Headers\PropertiesComponent.h"/>
     <ClInclude Include="..\..\Headers\PropertiesWindow.h"/>

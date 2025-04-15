@@ -1,3 +1,4 @@
+#pragma once
 #include <Channel.h>
 
 // Alternate approach: Make each channel a bus instead of a processor and let the user instantiate as many processors as they want. This way it does make a processor for each track. 
@@ -14,6 +15,9 @@ Channel::Channel(int index, juce::String name)
 Channel::~Channel() 
 {
 	volumeSlider.removeListener(this);
+	volumeSlider.removeAllChildren();
+	verticalMeter.removeAllChildren();
+	stopTimer();
 	removeAllChildren();
 }
 
@@ -61,11 +65,12 @@ void Channel::resized()
 	verticalMeter.toBack();
 }
 
-void Channel::process(const float* readPointer, float* writePointer, int numSamples)
+void Channel::process(float* writePointer, int numSamples)
 {
 	for (int i = 0; i < numSamples; i++) {
-		writePointer[i] = volume * readPointer[i];
+		writePointer[i] *= volume;
 	}
+
 	//rmsLevel = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
 }
 
@@ -76,6 +81,5 @@ void Channel::setRMSLevel(float rmsLevel) {
 void Channel::timerCallback()
 {
 	verticalMeter.setLevel(rmsLevelSnapshot);
-	DBG("Timer callback hit: Channel " + name);
 }
 

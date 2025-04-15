@@ -15,19 +15,16 @@ public:
     void initializeDeviceManager();
 
     void createMixer();
-
-    void enableDeviceSelectorComponent();
     
     void resized() override;
 
     void createGuiElements();
+    
+    void resetMixer();
 
     void mainComponentEventTriggered() override;
 
 private:
-    bool deviceSelectorComponentActive = false;
-
-    juce::AudioDeviceSelectorComponent *audioSettingsComp;
 
     juce::FlexBox mainFlexBox;
 
@@ -35,7 +32,7 @@ private:
 
     std::unique_ptr<juce::MenuBarComponent> menuBar;
 
-    MainMixer *mixer;
+    std::unique_ptr<MainMixer> mixer;
     
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
 

@@ -7,7 +7,7 @@ class MainMixer : public juce::Component, public juce::AudioIODeviceCallback
 {
 public:
 	MainMixer();
-	~MainMixer();
+	~MainMixer() override;
 
 	void createChannels();
 
@@ -29,6 +29,7 @@ public:
 private:
 	int numInputChannels = 0;
 	juce::StringArray inChannelNames;
+
 	int numOutputChannels = 0;
 	juce::StringArray outChannelNames;
 
@@ -38,7 +39,7 @@ private:
 	juce::Component outputComponent;
 	juce::FlexBox outputBox;
 
-	std::vector<Channel*> outChannels;
-	std::vector<Channel*> inChannels;
+	juce::OwnedArray<Channel> outChannels;
+	juce::OwnedArray<Channel> inChannels;
 
 };

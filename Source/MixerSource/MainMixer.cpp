@@ -1,3 +1,4 @@
+#pragma once
 #include <MainMixer.h>
 
 // Device manager -> audioIOdevice -> send data to mixer
@@ -15,22 +16,22 @@ MainMixer::~MainMixer()
 {
     inChannels.clear();
     outChannels.clear();
+
     removeAllChildren();
 }
 
 void MainMixer::createChannels() {
     for (int input = 0; input < numInputChannels; input++) {
-        auto channel = new Channel(input, inChannelNames[input]);
+        auto channel =inChannels.add(new Channel(input, inChannelNames[input]));
         inputComponent.addAndMakeVisible(channel);
         inputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
-        inChannels.push_back(channel);
     }
     for (int output = 0; output < numOutputChannels; output++) {
-        auto channel = new Channel(output, outChannelNames[output]);
+        auto channel = outChannels.add(new Channel(output, outChannelNames[output]));
         outputComponent.addAndMakeVisible(channel);
         outputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
-        outChannels.push_back(channel);
     }
+   // setSize(DEVICE_CONTAINER_WIDTH, 500);
 }
 
 void MainMixer::resetChannelList()
@@ -42,28 +43,86 @@ void MainMixer::resetChannelList()
 
     inputComponent.removeAllChildren();
     outputComponent.removeAllChildren();
-
-    auto device = deviceManager->getCurrentAudioDevice();
-    numInputChannels = device->getActiveInputChannels().countNumberOfSetBits();
-    inChannelNames = device->getInputChannelNames();
-    numOutputChannels = device->getActiveOutputChannels().countNumberOfSetBits();
-    outChannelNames = device->getOutputChannelNames();
-
-    createChannels();
 }
 
 void MainMixer::audioDeviceAboutToStart(juce::AudioIODevice* device)
 {
+    if (!inChannels.isEmpty()) { 
+        inChannels.clear();
+        inputComponent.removeAllChildren();
+    }
+    if (!outChannels.isEmpty()) { 
+        outChannels.clear(); 
+        outputComponent.removeAllChildren();
+
+    }
+
     numInputChannels = device->getActiveInputChannels().countNumberOfSetBits();
     inChannelNames = device->getInputChannelNames();
+
     numOutputChannels = device->getActiveOutputChannels().countNumberOfSetBits();
     outChannelNames = device->getOutputChannelNames();
+
     createChannels();
 }
 
-void MainMixer::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
+void MainMixer::audioDeviceIOCallbackWithContext(
+    const float* const* inputChannelData, 
+    int numInputChannels, 
+    float* const* outputChannelData, 
+    int numOutputChannels, 
+    int numSamples, 
+    const juce::AudioIODeviceCallbackContext& context )
 {
+    if (numInputChannels != inChannels.size()) {
+        DBG("INPUT CHANNEL MISMATCH- IOCALLBACK INS: " + juce::String(numInputChannels) + "INCHANNELS INS : " + juce::String(inChannels.size()));
+    }
+
+    juce::AudioBuffer<float> inputBuffer(const_cast<float**>(inputChannelData), numInputChannels, numSamples);
+
+    // Wrap output
+    juce::AudioBuffer<float> outputBuffer(outputChannelData, numOutputChannels, numSamples);
+
+    // For each input channel
+    for (int ch = 0; ch < numInputChannels; ++ch)
+    {
+        float* inputData = inputBuffer.getWritePointer(ch); // or getReadPointer if you want const
+
+        // Send to your processor
+        if (inChannels[ch] != nullptr)
+            inChannels[ch]->process(inputData, numSamples); // or pass rms, too
+            float rms = inputBuffer.getRMSLevel(ch, 0, numSamples);
+            inChannels[ch]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
+
+    }
+
+    // For each output channel
+    for (int ch = 0; ch < numOutputChannels; ++ch)
+    {
+        float* outputData = outputBuffer.getWritePointer(ch);
+
+        if (outChannels[ch] != nullptr)
+            outChannels[ch]->process(outputData, numSamples);
+            float rms = outputBuffer.getRMSLevel(ch, 0, numSamples);
+            outChannels[ch]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
+    }
 }
+
+   // juce::AudioBuffer<float> inputBuffer(numInputChannels, numSamples);
+   // juce::AudioBuffer<float> outputBuffer(numInputChannels, numSamples);
+   //
+   // for (int channel = 0; channel < numInputChannels; ++channel)
+   // {
+   //     inputBuffer.copyFrom(channel, 0, inputChannelData[channel], numSamples);
+   // }
+   // for (int channel = 0; channel < numInputChannels; ++channel) {
+   //     float* writePointer = inputBuffer.getWritePointer(channel);
+   //     inChannels[channel]->process(writePointer, numSamples);
+   //     float gain = inputBuffer.getRMSLevel(channel, 0, numSamples);
+   //     float rmsLevel = juce::Decibels::gainToDecibels(gain);
+   //     inChannels[channel]->setRMSLevel(rmsLevel);
+   // }
+   //
 
 void MainMixer::audioDeviceStopped()
 {

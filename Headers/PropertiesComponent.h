@@ -15,6 +15,6 @@ public:
 private:
     juce::Label label{ {}, "Select audio driver" };
 
-    juce::AudioDeviceSelectorComponent *audioSettingsComp;    
+    std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSettingsComp;    
 };
 

@@ -709,9 +709,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\MenuBarSource\Menu.cpp">
-      <Filter>AsioRouter\Source\MenuBarSource</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp">
       <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
@@ -720,9 +717,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp">
       <Filter>AsioRouter\Source\MenuBarSource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\MixerSource\AudioInputDevice.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MixerSource\Channel.cpp">
       <Filter>AsioRouter\Source\MixerSource</Filter>
@@ -3738,9 +3732,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Headers\AudioInputDevice.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Headers\Channel.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
@@ -3751,9 +3742,6 @@
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\MainMixer.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Headers\Menu.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\MenuBar.h">
