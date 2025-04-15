@@ -123,6 +123,7 @@
 		EFC38573DEDA4935AFDB84FD /* PropertiesComponent.h */ /* PropertiesComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PropertiesComponent.h; path = ../../Headers/PropertiesComponent.h; sourceTree = SOURCE_ROOT; };
 		F0818CAAA25E41FFFB53250C /* juce_gui_basics */ /* juce_gui_basics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_basics; path = "~/JUCE/modules/juce_gui_basics"; sourceTree = "<absolute>"; };
 		F69C82A1EBF794018C766852 /* include_juce_audio_processors_lv2_libs.cpp */ /* include_juce_audio_processors_lv2_libs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_processors_lv2_libs.cpp; path = ../../JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp; sourceTree = SOURCE_ROOT; };
+		FE530421FA4DB57569D709BB /* CustomListener.h */ /* CustomListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomListener.h; path = ../../Headers/CustomListener.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +220,7 @@
 			children = (
 				8CF4C3B5B9379E5575F78C19,
 				838DA08356A75D624D45F76D,
+				FE530421FA4DB57569D709BB,
 				72A56ADD4BEE454F8BF62999,
 				6A914997FC37021F77F67B79,
 				1E0A90B3C28D0AEB4A7CBADE,

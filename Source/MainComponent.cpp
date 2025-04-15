@@ -95,7 +95,7 @@ void MainComponent::createGuiElements() {
     addAndMakeVisible(*menuBar);
 
 }
-void MainComponent::menuBarPropertiesWindowClosed()
+void MainComponent::mainComponentEventTriggered()
 {
     mixer->resetChannelList();
 }

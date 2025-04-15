@@ -1,25 +1,20 @@
 #pragma once
 #include <JuceHeader.h>
 #include <PropertiesComponent.h>
+#include <CustomListener.h>
 
-class PropertiesWindow : public juce::DocumentWindow, public juce::ChangeBroadcaster
+class PropertiesWindow : public juce::DocumentWindow
 {
 public:
-	struct PropertiesWindowListener
-	{
-		virtual ~PropertiesWindowListener() = default;
-		virtual void propMenuCloseTriggred() = 0;
-	};
-
     PropertiesWindow();
     ~PropertiesWindow() override;
 
-	void setListener(PropertiesWindowListener* newListener);
+	void setListener(CustomListener* newListener);
 
     void closeButtonPressed() override;
 
 private:
 
-	PropertiesWindowListener* listener = nullptr;
+	CustomListener* listener = nullptr;
 
 };

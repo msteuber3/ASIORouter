@@ -3,9 +3,10 @@
 #include <MainMixer.h>
 #include <RouterHeader.h>
 #include <MenuBar.h>
+#include <CustomListener.h>
 #include <JuceHeader.h>
 
-class MainComponent  : public juce::Component, public MenuBar::Listener
+class MainComponent  : public juce::Component, public MainComponentListener
 {
 public:
     MainComponent();
@@ -21,7 +22,7 @@ public:
 
     void createGuiElements();
 
-    void menuBarPropertiesWindowClosed() override;
+    void mainComponentEventTriggered() override;
 
 private:
     bool deviceSelectorComponentActive = false;

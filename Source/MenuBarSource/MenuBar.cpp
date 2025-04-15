@@ -1,12 +1,11 @@
 #pragma once
 #include <MenuBar.h>
-#include <MainComponent.h>
-
 
 MenuBar::MenuBar() : juce::MenuBarModel() {}
 MenuBar::~MenuBar() {}
 
-void MenuBar::setListener(MenuListener* l)
+
+void MenuBar::setListener(MainComponentListener* l)
 {
     parentListener = l; 
 }
@@ -41,8 +40,6 @@ juce::PopupMenu MenuBar::getMenuForIndex(int topLevelMenuIndex, const juce::Stri
     return menu;
 }
 
-
-
 // Handle the menu item selection (if not using lambdas directly in the menu)
 void MenuBar::menuItemSelected(int menuItemID, int topLevelMenuIndex)
 {}
@@ -50,11 +47,11 @@ void MenuBar::menuItemSelected(int menuItemID, int topLevelMenuIndex)
 void MenuBar::createPropertiesWindow()
 {
     auto* propertiesWindow = new PropertiesWindow();
-    propertiesWindow->setListener(parentListener);
+    propertiesWindow->setListener(this);
 }
 
-void MenuBar::propMenuCloseTriggred()
+void MenuBar::eventTriggered()
 {
     if (parentListener != nullptr)
-        parentListener->menuBarPropertiesWindowClosed();
+        parentListener->mainComponentEventTriggered();
 }

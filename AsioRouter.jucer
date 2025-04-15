@@ -7,6 +7,8 @@
       <FILE id="h4EaMw" name="AudioInputDevice.h" compile="0" resource="0"
             file="Headers/AudioInputDevice.h"/>
       <FILE id="MU9laJ" name="Channel.h" compile="0" resource="0" file="Headers/Channel.h"/>
+      <FILE id="VhdKzl" name="CustomListener.h" compile="0" resource="0"
+            file="Headers/CustomListener.h"/>
       <FILE id="alOw1m" name="MainComponent.h" compile="0" resource="0" file="Headers/MainComponent.h"/>
       <FILE id="vQDTwh" name="MainMixer.h" compile="0" resource="0" file="Headers/MainMixer.h"/>
       <FILE id="csMAMz" name="Menu.h" compile="0" resource="0" file="Headers/Menu.h"/>

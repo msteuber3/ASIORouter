@@ -1,19 +1,15 @@
 #pragma once
 #include <JuceHeader.h>
-#include "../CustomListener.cpp"
+#include <CustomListener.h>
 #include <PropertiesWindow.h>
 
-class MenuBar : public juce::MenuBarModel, public PropertiesWindow::PropertiesWindowListener {
+class MenuBar : public juce::MenuBarModel, public CustomListener {
 public:
-	struct MenuListener {
-		virtual ~MenuListener() = default;
-		virtual void menuBarPropertiesWindowClosed() = 0;
-	};
 
 	MenuBar();
 	~MenuBar() override;
 
-	void setListener(MenuListener* l);
+	void setListener(MainComponentListener* l);
 
 	juce::StringArray getMenuBarNames() override;
 
@@ -23,10 +19,10 @@ public:
 
 	void createPropertiesWindow();
 
-	void propMenuCloseTriggred() override;
+	void eventTriggered() override;
 
 private:
 
-	MenuListener* parentListener = nullptr;
+	MainComponentListener* parentListener = nullptr;
 
 };
