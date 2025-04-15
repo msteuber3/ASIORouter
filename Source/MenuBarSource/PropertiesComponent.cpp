@@ -1,40 +1,27 @@
 #pragma once
 #include <PropertiesComponent.h>
 
-PropertiesComponent::PropertiesComponent()
+PropertiesComponent::PropertiesComponent() : Component()
 {
     generateDriverDropdown();
 }
 
-PropertiesComponent::~PropertiesComponent()
-{
-    deviceTypes.clear();
-    audioDrivers.clear();
+PropertiesComponent::~PropertiesComponent(){
+    removeAllChildren();
 }
 
 void PropertiesComponent::generateDriverDropdown(){
     juce::Font textFont{ 12.0f };
     label.setFont(textFont);
     addAndMakeVisible(label);
-    addAndMakeVisible(audioDrivers);
-    deviceManager->createAudioDeviceTypes(deviceTypes);
+    audioSettingsComp = new juce::AudioDeviceSelectorComponent{ *deviceManager, 2, 16, 2, 2, true, true, true, false };
 
-    //mainFlexBox.items.add(juce::FlexItem(deviceTypeLabel).withMinWidth(20).withMinHeight(10));
-    for (size_t i = 0; i < deviceTypes.size(); i++) {
-        audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
-    }
-    audioDrivers.onChange = [this] { changeAudioDriver(); };
-    audioDrivers.setSelectedId(1);
-}
-
-void PropertiesComponent::changeAudioDriver() {
-    int id = audioDrivers.getSelectedId() - 1;
-
-    deviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
+    addAndMakeVisible(audioSettingsComp);
+    audioSettingsComp->setSize(getWidth(), getHeight() - 10);
 }
 
 void PropertiesComponent::resized()
 {
     label.setBounds(10, 10, getWidth() - 20, 24);
-    audioDrivers.setBounds(0, label.getBottom(), 100, 20);
+    audioSettingsComp->setBounds(0, label.getBottom(), getWidth(), getHeight());
 }

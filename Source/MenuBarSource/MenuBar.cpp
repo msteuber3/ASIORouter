@@ -1,9 +1,15 @@
 #pragma once
 #include <MenuBar.h>
+#include <MainComponent.h>
 
-MenuBar::MenuBar() : juce::MenuBarModel()
-{}
+
+MenuBar::MenuBar() : juce::MenuBarModel() {}
 MenuBar::~MenuBar() {}
+
+void MenuBar::setListener(MenuListener* l)
+{
+    parentListener = l; 
+}
 
 juce::StringArray MenuBar::getMenuBarNames()
 {
@@ -28,17 +34,27 @@ juce::PopupMenu MenuBar::getMenuForIndex(int topLevelMenuIndex, const juce::Stri
         menu.addItem("Redo", [] { /* handle redo */ });
         break;
     case 2:
-        menu.addItem("Properties", [this] {auto* propertiesWindow = new PropertiesWindow(); });
+        menu.addItem("Properties", [this] { createPropertiesWindow(); });
         break;
     
     }
-
-
     return menu;
 }
 
+
+
 // Handle the menu item selection (if not using lambdas directly in the menu)
 void MenuBar::menuItemSelected(int menuItemID, int topLevelMenuIndex)
+{}
+
+void MenuBar::createPropertiesWindow()
 {
-    // Optional: if not using lambdas
+    auto* propertiesWindow = new PropertiesWindow();
+    propertiesWindow->setListener(parentListener);
+}
+
+void MenuBar::propMenuCloseTriggred()
+{
+    if (parentListener != nullptr)
+        parentListener->menuBarPropertiesWindowClosed();
 }

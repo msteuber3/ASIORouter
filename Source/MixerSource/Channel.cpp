@@ -2,8 +2,8 @@
 
 // Alternate approach: Make each channel a bus instead of a processor and let the user instantiate as many processors as they want. This way it does make a processor for each track. 
 // Make one global processor(?) and route all audio through that (???) I just dont know if you can chain specific in channels to specific out channels
-Channel::Channel(int index, int deviceIndex, juce::String name)
-	: juce::Slider::Listener(), juce::Component(), juce::Timer(), index(index), deviceIndex(deviceIndex), rmsLevelSnapshot(0.f), name(name)
+Channel::Channel(int index, juce::String name)
+	: juce::Slider::Listener(), juce::Component(), juce::Timer(), index(index), rmsLevelSnapshot(0.f), name(name)
 {
 	startTimerHz(30);
 	createSlider(name);
@@ -14,6 +14,7 @@ Channel::Channel(int index, int deviceIndex, juce::String name)
 Channel::~Channel() 
 {
 	volumeSlider.removeListener(this);
+	removeAllChildren();
 }
 
 
@@ -47,7 +48,7 @@ int Channel::getXCoord() {
 // Height is 150 for the slider, 50 for the label
 // Width is 100 for both
 int Channel::getYCoord() {
-	return (200 * deviceIndex) + 50;
+	return 200 + 50;
 }
 
 void Channel::resized()

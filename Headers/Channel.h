@@ -6,7 +6,7 @@
 class Channel : public juce::Component, public juce::Slider::Listener, private juce::Timer
 {
 public:
-	Channel(int index, int deviceIndex, juce::String name);
+	Channel(int index, juce::String name);
 	~Channel() override;
 
 	void createSlider(juce::String labelName);
@@ -31,7 +31,6 @@ public:
 
 private:
 	int index;
-	int deviceIndex;
 	juce::Slider volumeSlider;
 	juce::Label volumeLabel;
 	float volume;

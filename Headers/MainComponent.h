@@ -5,40 +5,38 @@
 #include <MenuBar.h>
 #include <JuceHeader.h>
 
-class MainComponent  : public juce::Component
+class MainComponent  : public juce::Component, public MenuBar::Listener
 {
 public:
     MainComponent();
     ~MainComponent() override;
 
-    std::vector<std::tuple<juce::AudioChannelSet, juce::String>>setBusesProperties(bool input);
+    void initializeDeviceManager();
 
-    // To this, add the following (maybe): AudioProcessorGraph of InputDevice channel nodes
+    void createMixer();
+
+    void enableDeviceSelectorComponent();
     
     void resized() override;
 
     void createGuiElements();
 
+    void menuBarPropertiesWindowClosed() override;
+
 private:
-    void initializeMenu();
+    bool deviceSelectorComponentActive = false;
+
+    juce::AudioDeviceSelectorComponent *audioSettingsComp;
 
     juce::FlexBox mainFlexBox;
-    
-    juce::StringArray inDeviceNames;
-    juce::StringArray outDeviceNames;
 
     MenuBar menuModel;
+
     std::unique_ptr<juce::MenuBarComponent> menuBar;
 
-    std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
-
-    std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
-    std::unique_ptr<MainMixer> mixer;
+    MainMixer *mixer;
     
     juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-
-    juce::AudioProcessorPlayer processorPlayer;
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

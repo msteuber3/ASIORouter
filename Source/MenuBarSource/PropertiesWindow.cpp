@@ -3,7 +3,7 @@
 #include <PropertiesWindow.h>
 
 PropertiesWindow::PropertiesWindow()
-    : DocumentWindow("Properties", juce::Colours::darkgrey, DocumentWindow::allButtons)
+    : DocumentWindow("Properties", juce::Colours::darkgrey, DocumentWindow::allButtons), ChangeBroadcaster()
 {
     setUsingNativeTitleBar(true);
     setContentOwned(new PropertiesComponent(), true);
@@ -12,7 +12,16 @@ PropertiesWindow::PropertiesWindow()
     setVisible(true);
 }
 
+PropertiesWindow::~PropertiesWindow(){}
+
+void PropertiesWindow::setListener(PropertiesWindowListener* newListener)
+{
+    listener = newListener;
+}
+
 void PropertiesWindow::closeButtonPressed()
 {
-    delete this; // self-destruct when closed
+    if (listener != nullptr)
+        listener->propMenuCloseTriggred();
+    delete this;
 }

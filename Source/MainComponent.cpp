@@ -39,78 +39,74 @@ std::unique_ptr<juce::AudioDeviceManager> deviceManager;
 
 MainComponent::MainComponent() : Component()
 {
-    deviceManager = std::make_unique<juce::AudioDeviceManager>();
-    //juce::AudioDeviceManager::AudioDeviceSetup deviceSetup = deviceManager->getAudioDeviceSetup();
-    //deviceSetup.bufferSize = 441;
-    deviceManager->initialise(20, 20, nullptr, true); // , juce::String(), & deviceSetup);
-    deviceManager->createAudioDeviceTypes(deviceTypes);
-    outputGraph = std::make_unique<juce::AudioProcessorGraph>();
-    //deviceManager->setAudioChannels(20, 20);
+    initializeDeviceManager();
+    createMixer();
     createGuiElements();
-
-
     setSize(2000, 800);
+
+    //deviceManager->setAudioChannels(20, 20);
+   // createGuiElements();
+
+
 }
 
 MainComponent::~MainComponent() 
 {
-   outputGraph->clear();
-   inputDevices.clear();
-   deviceManager->removeAudioCallback(&processorPlayer);
-   processorPlayer.setProcessor(nullptr);
+   deviceManager->removeAudioCallback(mixer);
    deviceManager->removeAllChangeListeners();
    deviceManager->closeAudioDevice();
    deviceManager.reset();
    removeAllChildren();
 }
 
-std::vector<std::tuple<juce::AudioChannelSet, juce::String>> MainComponent::setBusesProperties(bool input) {
-    std::vector <std::tuple<juce::AudioChannelSet, juce::String>> channelVector;
-    auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
-    deviceType->scanForDevices();
-    juce::StringArray devices = deviceType->getDeviceNames(input);
-    for (juce::String& name : devices) {
-        if (name.contains("Realtek Digital Output")) {
-            DBG("REALTEK NAME:" + name);
-            break;
-        }
-        auto deviceObject = deviceType->createDevice(name, name);
+void MainComponent::initializeDeviceManager() {
+    deviceManager = std::make_unique<juce::AudioDeviceManager>();
+    
 
-        const juce::BigInteger& numInputs = deviceObject->getInputChannelNames().size();
-        const juce::BigInteger& numOutputs = deviceObject->getOutputChannelNames().size();
-
-        deviceObject->open(numInputs, numOutputs, 44100, 441);
-
-        auto activeInputChannels = input ? deviceObject->getActiveInputChannels() : deviceObject->getActiveOutputChannels();
-        int maxIO = activeInputChannels.getHighestBit() + 1;
-        if (maxIO == 1) { channelVector.push_back(std::tuple<juce::AudioChannelSet, juce::String>(juce::AudioChannelSet::mono(), name)); }
-        else if (maxIO == 2) { channelVector.push_back(std::tuple<juce::AudioChannelSet, juce::String>(juce::AudioChannelSet::stereo(), name)); }
-        else { channelVector.push_back(std::tuple<juce::AudioChannelSet, juce::String>(juce::AudioChannelSet::discreteChannels(maxIO), name)); }
-        deviceObject->close();
-    }
-    return channelVector;
+    deviceManager->initialise(20, 20, nullptr, true, juce::String(), nullptr);
+    deviceManager->setCurrentAudioDeviceType(juce::String("ASIO"), true); //TODO: Add check here to make sure asio is installed
+    auto* setup = new juce::AudioDeviceManager::AudioDeviceSetup();
+    deviceManager->getAudioDeviceSetup(*setup);
+    setup->inputDeviceName = "ASIO4ALL v2";
+    setup->outputDeviceName = "ASIO4ALL v2";
+    deviceManager->setAudioDeviceSetup(*setup, true);
 }
+
+void MainComponent::createMixer()
+{
+    mixer = new MainMixer();
+    deviceManager->addAudioCallback(mixer);
+}
+
+void MainComponent::enableDeviceSelectorComponent()
+{
+    audioSettingsComp = new juce::AudioDeviceSelectorComponent{ *deviceManager, 2, 16, 2, 2, true, true, true, false };
+
+    addAndMakeVisible(audioSettingsComp);
+    audioSettingsComp->setSize(500, 250);
+    deviceSelectorComponentActive = true;
+}
+
 
 void MainComponent::createGuiElements() {
 
     menuBar.reset(new juce::MenuBarComponent(&menuModel));
+    menuModel.setListener(this);
     addAndMakeVisible(*menuBar);
 
-    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> inputBuses = setBusesProperties(true);
-    std::vector<std::tuple<juce::AudioChannelSet, juce::String>> outputBuses = setBusesProperties(false);
-
-    auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
-    mixer = std::make_unique<MainMixer>(deviceType, inputBuses, outputBuses);
-    mixer->startDevices(&processorPlayer);
-    processorPlayer.setProcessor(mixer.get());
-    deviceManager->addAudioCallback(&processorPlayer);
-
 }
+void MainComponent::menuBarPropertiesWindowClosed()
+{
+    mixer->resetChannelList();
+}
+
 void MainComponent::resized() {
+    if (deviceSelectorComponentActive) { addAndMakeVisible(audioSettingsComp); }
+    addAndMakeVisible(mixer);
+
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
     menuBar->setBounds(0, 0, getWidth(), 25);
-    addAndMakeVisible(*mixer);
     mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(getWidth()).withMinHeight(800));
 
     juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 30, getWidth(), getHeight());
@@ -122,6 +118,3 @@ void MainComponent::resized() {
 
     mainFlexBox.performLayout(fbRect);
 }
-
-void MainComponent::initializeMenu() {}
-

@@ -11,14 +11,10 @@ public:
     void resized() override;
     
     void generateDriverDropdown();
-    
-    void changeAudioDriver();
-    
+        
 private:
     juce::Label label{ {}, "Select audio driver" };
 
-    juce::ComboBox audioDrivers;
-    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-    
+    juce::AudioDeviceSelectorComponent *audioSettingsComp;    
 };
 
