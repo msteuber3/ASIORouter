@@ -3,36 +3,18 @@
 #include <MainComponent.h>
 
 
-// So MainComponent will inherit from component. 
-//      Each input device will be its own AudioIODevice and will need its own AudioIODeviceCallback
-//      Then, a custom AudioDeviceManager (Not that inherits from that, but replaces it) 
-//      & a mixer class that recieves all input buffers
 
-// AudioIODevice -> AudioProcessorPlayer:audioDeviceIOCallbackWithContext -> an AudioProcessor -> an audioProcessor graph -> some output
-// Remember that integral to this plan is the 
-
-// Required classes:
-/*
-*  MainComponent:Component
-* Scan for device types and have the user select one, then pass that to v
-*  InputDevice:AudioProcessorPlayer
-*       The device class should turn the input channels of the device into a list of AudioProcessors in a graph and then the final graph is a compiliation of all the graphs
-*  InputChannel:AudioProcessor
-*       This is where the sliders come in
-*  InputDeviceManager
-* 
-*/
 
 /*
-* MainComponent shouhld contain the following:
-* GUI stuff, so for the IO portion of this addAndMakeVisible a mixer object
+*TODO:
+* OUTPUTS
+* routing
+* figure out how to handle read only input buffers
+* extract channel name info from asio4all or figure out a workaround
+* figure out how to handle stereo ins
 * 
-* Mixer should take all the input & output info and position it
-* So Mixer Component would be an apt description
-* 
-* each AudioInputDevice should place each individual slider in a row
-* 
-* I also need a lookandfeel class
+* Documentation
+* bug checking
 * 
 */
 std::unique_ptr<juce::AudioDeviceManager> deviceManager;

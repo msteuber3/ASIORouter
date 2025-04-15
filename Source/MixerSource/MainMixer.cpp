@@ -80,31 +80,27 @@ void MainMixer::audioDeviceIOCallbackWithContext(
 
     juce::AudioBuffer<float> inputBuffer(const_cast<float**>(inputChannelData), numInputChannels, numSamples);
 
-    // Wrap output
     juce::AudioBuffer<float> outputBuffer(outputChannelData, numOutputChannels, numSamples);
 
-    // For each input channel
-    for (int ch = 0; ch < numInputChannels; ++ch)
+    for (int channel = 0; channel < numInputChannels; ++channel)
     {
-        float* inputData = inputBuffer.getWritePointer(ch); // or getReadPointer if you want const
+        float* inputData = inputBuffer.getWritePointer(channel);
 
-        // Send to your processor
-        if (inChannels[ch] != nullptr)
-            inChannels[ch]->process(inputData, numSamples); // or pass rms, too
-            float rms = inputBuffer.getRMSLevel(ch, 0, numSamples);
-            inChannels[ch]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
+        if (inChannels[channel] != nullptr)
+            inChannels[channel]->process(inputData, numSamples);
+            float rms = inputBuffer.getRMSLevel(channel, 0, numSamples);
+            inChannels[channel]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
 
     }
 
-    // For each output channel
-    for (int ch = 0; ch < numOutputChannels; ++ch)
+    for (int channel = 0; channel < numOutputChannels; ++channel)
     {
-        float* outputData = outputBuffer.getWritePointer(ch);
+        float* outputData = outputBuffer.getWritePointer(channel);
 
-        if (outChannels[ch] != nullptr)
-            outChannels[ch]->process(outputData, numSamples);
-            float rms = outputBuffer.getRMSLevel(ch, 0, numSamples);
-            outChannels[ch]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
+        if (outChannels[channel] != nullptr)
+            outChannels[channel]->process(outputData, numSamples);
+            float rms = outputBuffer.getRMSLevel(channel, 0, numSamples);
+            outChannels[channel]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
     }
 }
 
