@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 
 #include <MainMixer.h>
 #include <RouterHeader.h>
@@ -11,33 +12,25 @@ public:
     MainComponent();
     ~MainComponent() override;
 
-    // To this, add the following (maybe): AudioProcessorGraph of InputDevice channel nodes
+    void initializeDeviceManager();
+
+    void createMixer(juce::AudioIODeviceType* deviceType);
     
     void resized() override;
 
     void createGuiElements();
-
+    
 private:
-    void changeAudioDriver();
-
-    void initializeMenu();
 
     juce::FlexBox mainFlexBox;
-    
-    std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSetting;
-    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-    juce::ComboBox audioDrivers;
-    juce::StringArray inDeviceNames;
-    juce::StringArray outDeviceNames;
 
     MenuBar menuModel;
+
     std::unique_ptr<juce::MenuBarComponent> menuBar;
 
-    std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
-
-    std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
     std::unique_ptr<MainMixer> mixer;
     
+    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

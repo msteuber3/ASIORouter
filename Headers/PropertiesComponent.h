@@ -6,18 +6,15 @@ class PropertiesComponent : public juce::Component
 {
 public:
     PropertiesComponent();
+    ~PropertiesComponent() override;
     
     void resized() override;
     
     void generateDriverDropdown();
-    
-    void changeAudioDriver();
-    
+        
 private:
-    juce::Label label;
+    juce::Label label{ {}, "Select audio driver" };
 
-    juce::ComboBox audioDrivers;
-    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
-    
+    std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSettingsComp;    
 };
 

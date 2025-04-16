@@ -4,6 +4,7 @@
 
 class MenuBar : public juce::MenuBarModel {
 public:
+
 	MenuBar();
 	~MenuBar() override;
 
@@ -13,6 +14,7 @@ public:
 
 	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
+	void createPropertiesWindow();
 
 private:
 

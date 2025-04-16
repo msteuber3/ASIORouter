@@ -21,15 +21,15 @@ void VerticalMeter::paint(juce::Graphics& g)
     g.setColour(juce::Colours::white.withBrightness(0.4f));
     g.fillRoundedRectangle(bounds, 5.f);
 
-    g.setColour(juce::Colours::white);
-
-    const auto scaledX = juce::jmap(level, -60.0f, +6.f, 0.f, static_cast<float>(getWidth()));
-
-    g.fillRoundedRectangle(bounds.removeFromTop(scaledX), 5.f);
-
+    if (level > -60) {
+        g.setColour(juce::Colours::white);
+        const auto scaledX = juce::jmap(level, -60.0f, +6.f, 0.f, static_cast<float>(getHeight()));
+        g.fillRoundedRectangle(bounds.removeFromBottom(scaledX), 5.f);
+    }
 }
 
 void VerticalMeter::setLevel(const float value)
 {
     level = value;
+    repaint();
 }

@@ -1,100 +1,86 @@
 //TODO: universal in&out min/max
-
+#pragma once
 #include <MainComponent.h>
-
-
-// So MainComponent will inherit from component. 
-//      Each input device will be its own AudioIODevice and will need its own AudioIODeviceCallback
-//      Then, a custom AudioDeviceManager (Not that inherits from that, but replaces it) 
-//      & a mixer class that recieves all input buffers
-
-// AudioIODevice -> AudioProcessorPlayer:audioDeviceIOCallbackWithContext -> an AudioProcessor -> an audioProcessor graph -> some output
-// Remember that integral to this plan is the 
-
-// Required classes:
 /*
-*  MainComponent:Component
-* Scan for device types and have the user select one, then pass that to v
-*  InputDevice:AudioProcessorPlayer
-*       The device class should turn the input channels of the device into a list of AudioProcessors in a graph and then the final graph is a compiliation of all the graphs
-*  InputChannel:AudioProcessor
-*       This is where the sliders come in
-*  InputDeviceManager
+*TODO:
+* OUTPUTS
+* routing
+* figure out how to handle read only input buffers
+* extract channel name info from asio4all or figure out a workaround
+* figure out how to handle stereo ins
+*  more in depth audio io channel comparriosn testing - I think this only worked cause I turned on the headphones which were already enabled in a4a
+* Documentation
+* bug checking
 * 
+* 
+* 
+* With JACK, I want to get all ports and THEN worry about connections. Right now the concern is how to get ports. The JackRouter.ini file is probably the answer, but
+* how do I make a port? there's jack_port_register(client, 
 */
+std::unique_ptr<juce::AudioDeviceManager> deviceManager;
 
-/*
-* MainComponent shouhld contain the following:
-* GUI stuff, so for the IO portion of this addAndMakeVisible a mixer object
-* 
-* Mixer should take all the input & output info and position it
-* So Mixer Component would be an apt description
-* 
-* each AudioInputDevice should place each individual slider in a row
-* 
-* I also need a lookandfeel class
-* 
-*/
-MainComponent::MainComponent() : Component()
+MainComponent::MainComponent() : juce::Component()
 {
-    //mainDeviceManager = std::make_unique<juce::AudioDeviceManager>();
-    //mainDeviceManager->initialise(20, 2, nullptr, true);
-    deviceManager = new juce::AudioDeviceManager();
-    deviceManager->initialise(20, 2, nullptr, true);
-    deviceManager->createAudioDeviceTypes(deviceTypes);
-
-    outputGraph = std::make_unique<juce::AudioProcessorGraph>();
-
-    createGuiElements();
-
-
-    setSize(1000, 800);
+    initializeDeviceManager();
+    setSize(2000, 800); //TODO: Automatically reset size to match number of devices
 }
 
 MainComponent::~MainComponent() 
 {
-    outputGraph->clear();
-    inputDevices.clear();
-    deviceManager->removeAllChangeListeners();
-    deviceManager->closeAudioDevice();
-    removeAllChildren();
+   deviceManager->removeAllChangeListeners();
+   if (deviceManager->getCurrentAudioDevice()) {
+       deviceManager->closeAudioDevice();
+   }
+   deviceManager.reset();
+   menuBar.reset();
+   removeAllChildren();
+}
+
+void MainComponent::initializeDeviceManager() {
+    deviceManager = std::make_unique<juce::AudioDeviceManager>();
+    
+    deviceManager->initialise(20, 20, nullptr, true, juce::String(), nullptr);
+    deviceManager->createAudioDeviceTypes(deviceTypes);
+
+    for (auto type : deviceTypes)
+    {       
+        DBG("Device type: " + type->getTypeName());
+
+        if (type->getTypeName().containsIgnoreCase("asio")) 
+        {
+            type->scanForDevices();
+            deviceManager->setCurrentAudioDeviceType(type->getTypeName(), true);
+            createMixer(type);
+            break;
+        }
+    }
+}
+
+void MainComponent::createMixer(juce::AudioIODeviceType* deviceType)
+{
+    mixer = std::make_unique<MainMixer>();
+    mixer->createJuceDevices(deviceType);
 }
 
 void MainComponent::createGuiElements() {
 
     menuBar.reset(new juce::MenuBarComponent(&menuModel));
     addAndMakeVisible(*menuBar);
-
-    juce::Label deviceTypeLabel{ {}, "Select audio driver" };
-    juce::Font textFont{ 12.0f };
-    deviceTypeLabel.setFont(textFont);
-    addAndMakeVisible(deviceTypeLabel);
-    addAndMakeVisible(audioDrivers);
-    //mainFlexBox.items.add(juce::FlexItem(deviceTypeLabel).withMinWidth(20).withMinHeight(10));
-    for (int i = 0; i < deviceTypes.size(); i++) {
-        audioDrivers.addItem(deviceTypes[i]->getTypeName(), i + 1);
-    }
-    audioDrivers.onChange = [this] { changeAudioDriver(); };
-    audioDrivers.setSelectedId(1);
-    mainFlexBox.items.add(juce::FlexItem(audioDrivers).withMinWidth(100).withMinHeight(40));
-    auto* deviceType = deviceManager->getCurrentDeviceTypeObject();
-    mixer = std::make_unique<MainMixer>(deviceType);
-
-}
-
-void MainComponent::changeAudioDriver() {
-    int id = audioDrivers.getSelectedId() - 1;
-    deviceManager->setCurrentAudioDeviceType(deviceTypes[id]->getTypeName(), true);
+    mixer->createGUI();
+    addAndMakeVisible(*mixer);
 }
 
 void MainComponent::resized() {
+    createGuiElements();
+
+    addAndMakeVisible(*mixer);
+
     //textLabel.setBounds(10, 10, getWidth() - 20, 20);
     //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
     menuBar->setBounds(0, 0, getWidth(), 25);
-    addAndMakeVisible(*mixer);
-    mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(1000).withMinHeight(800));
+    mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(getWidth()).withMinHeight(800));
 
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 25, 1000, 800);
+    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 30, getWidth(), getHeight());
 
     mainFlexBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     mainFlexBox.flexDirection = juce::FlexBox::Direction::row;
@@ -103,6 +89,3 @@ void MainComponent::resized() {
 
     mainFlexBox.performLayout(fbRect);
 }
-
-void MainComponent::initializeMenu() {}
-

@@ -1,33 +1,35 @@
 #pragma once
-#include <AudioInputDevice.h>
+#include <RouterHeader.h>
+#include <Channel.h>
+#include <JuceAsioDevice.h>
+#include <JackJuceBridge.h>
 #include <JuceHeader.h>
 
-class MainMixer : public juce::Component
+class MainMixer : public juce::Component //,  public juce::AudioIODeviceCallback    | Thought: It'd be pretty cool if I could make JackWrapper::AudioCallback a class that his inherits from
 {
 public:
-	MainMixer(juce::AudioIODeviceType* deviceType);
-	~MainMixer();
+	MainMixer();
+	~MainMixer() override;
 
-	void ScanCurrentDriver();
+	void createJuceDevices(juce::AudioIODeviceType* deviceType);
+
+	void createBridgeDevices(juce::AudioIODeviceType* deviceType);
+
+	void createGUI();
+
+	void createBridgeGUI();
 
 	void resized() override;
 
-	//void audioDeviceIOCallbackWithContext(const float* const * inputChannelData, int numInputChannels,
-	//	float* const * outputChannelData, int numOutputChannels,
-	//	int numSamples, const juce::AudioIODeviceCallbackContext& context) override;
-
-	void InitializeInputDevices();
-
-	void RefreshInputDevices();
-
-
 private:
+	juce::OwnedArray<JuceAsioDevice> juceDevices;
+
+	juce::OwnedArray<JackDeviceBridge> inputDevices;
+	juce::OwnedArray<JackDeviceBridge> outputDevices;
+
 	juce::FlexBox mixerBox;
-	std::vector<std::unique_ptr<juce::AudioSource>> inputSourceList;
-	juce::AudioIODeviceType* deviceType;
-	juce::StringArray inDeviceNames;
-	juce::StringArray outDeviceNames;
-	std::vector<std::unique_ptr<AudioInputDevice>> inputDevices;
-	std::unique_ptr<juce::AudioProcessorGraph> outputGraph;
+
+	juce::OwnedArray<Channel> outChannels;
+	juce::OwnedArray<Channel> inChannels;
 
 };

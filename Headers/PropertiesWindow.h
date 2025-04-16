@@ -6,6 +6,10 @@ class PropertiesWindow : public juce::DocumentWindow
 {
 public:
     PropertiesWindow();
+    ~PropertiesWindow() override;
+
 
     void closeButtonPressed() override;
+
+private:
 };

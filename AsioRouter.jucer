@@ -4,12 +4,13 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{EBA70CA8-4366-8D16-0F41-57759F9FED7A}" name="Headers">
-      <FILE id="h4EaMw" name="AudioInputDevice.h" compile="0" resource="0"
-            file="Headers/AudioInputDevice.h"/>
+      <FILE id="GGkYUm" name="JackJuceBridge.h" compile="0" resource="0"
+            file="Headers/JackJuceBridge.h"/>
       <FILE id="MU9laJ" name="Channel.h" compile="0" resource="0" file="Headers/Channel.h"/>
       <FILE id="alOw1m" name="MainComponent.h" compile="0" resource="0" file="Headers/MainComponent.h"/>
+      <FILE id="FpgbFp" name="JuceAsioDevice.h" compile="0" resource="0"
+            file="Headers/JuceAsioDevice.h"/>
       <FILE id="vQDTwh" name="MainMixer.h" compile="0" resource="0" file="Headers/MainMixer.h"/>
-      <FILE id="csMAMz" name="Menu.h" compile="0" resource="0" file="Headers/Menu.h"/>
       <FILE id="qji3Cy" name="MenuBar.h" compile="0" resource="0" file="Headers/MenuBar.h"/>
       <FILE id="yKkTcQ" name="PropertiesComponent.h" compile="0" resource="0"
             file="Headers/PropertiesComponent.h"/>
@@ -17,10 +18,14 @@
             file="Headers/PropertiesWindow.h"/>
       <FILE id="yROn08" name="RouterHeader.h" compile="0" resource="0" file="Headers/RouterHeader.h"/>
       <FILE id="M9mSd5" name="VerticalMeter.h" compile="0" resource="0" file="Headers/VerticalMeter.h"/>
+      <FILE id="l1o86N" name="RingBuffer.h" compile="0" resource="0" file="Headers/RingBuffer.h"/>
     </GROUP>
     <GROUP id="{C3AF3184-3A2E-A867-23EA-5C7D44DC79C5}" name="Source">
+      <FILE id="OJNNlQ" name="JuceAsioDevice.cpp" compile="1" resource="0"
+            file="Source/JuceAsioDevice.cpp"/>
+      <FILE id="jlfazN" name="JackJuceBridge.cpp" compile="1" resource="0"
+            file="Source/JackJuceBridge.cpp"/>
       <GROUP id="{44B61265-C382-0299-3009-4E2FC0FC223C}" name="MenuBarSource">
-        <FILE id="kz84Gs" name="Menu.cpp" compile="1" resource="0" file="Source/MenuBarSource/Menu.cpp"/>
         <FILE id="nfQzWy" name="MenuBar.cpp" compile="1" resource="0" file="Source/MenuBarSource/MenuBar.cpp"/>
         <FILE id="gcKE2p" name="PropertiesComponent.cpp" compile="1" resource="0"
               file="Source/MenuBarSource/PropertiesComponent.cpp"/>
@@ -28,8 +33,6 @@
               file="Source/MenuBarSource/PropertiesWindow.cpp"/>
       </GROUP>
       <GROUP id="{ED673598-C240-93C6-ADC4-C5845F7209E7}" name="MixerSource">
-        <FILE id="A4BqCq" name="AudioInputDevice.cpp" compile="1" resource="0"
-              file="Source/MixerSource/AudioInputDevice.cpp"/>
         <FILE id="eX4iUw" name="Channel.cpp" compile="1" resource="0" file="Source/MixerSource/Channel.cpp"/>
         <FILE id="Wrq2Pu" name="MainMixer.cpp" compile="1" resource="0" file="Source/MixerSource/MainMixer.cpp"/>
         <FILE id="ZebZYO" name="VerticalMeter.cpp" compile="1" resource="0"
@@ -58,9 +61,10 @@
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" FOLEYS_ENABLE_BINARY_DATA="1"
                FOLEYS_SHOW_GUI_EDITOR_PALLETTE="1"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/VisualStudio2022">
+    <VS2022 targetFolder="Builds/VisualStudio2022" externalLibraries="C:\Program Files\JACK2\lib\libjack64.lib">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="C:\Users\Michael\Programming\JUCE\modules\common&#10;C:\Users\Michael\Programming\AsioRouter\Headers&#10;C:\Program Files\JACK2\include"
+                       defines="JUCE_ASIO=1&#10;JUCE_JACK=1" libraryPath="C:\Program Files\JACK2\include"/>
         <CONFIGURATION isDebug="0" name="Release"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -81,7 +85,7 @@
     </VS2022>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="1" name="Debug" defines="JUCE_ASIO=1" headerPath="/Users/michael/Documents/Programming/JUCE/modules/common&#10;/Users/michael/Documents/Programming/AsioRouter/Headers"/>
         <CONFIGURATION isDebug="0" name="Release"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
