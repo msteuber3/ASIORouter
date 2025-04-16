@@ -5,12 +5,23 @@
 
 // Remove scanCurrentDriver from constructor
 
-MainMixer::MainMixer()
-    : juce::Component(), juce::AudioIODeviceCallback()
+MainMixer::MainMixer() : 
+    juce::Component(),
+    JackAudioCallback()
 {
     addAndMakeVisible(inputComponent);
     addAndMakeVisible(outputComponent);
-}   
+}
+
+MainMixer::MainMixer(int numInputChannels, int numOutputChannels) : 
+    juce::Component(), 
+    JackAudioCallback(),
+    numInputChannels(numInputChannels),
+    numOutputChannels(numInputChannels)
+{
+    addAndMakeVisible(inputComponent);
+    addAndMakeVisible(outputComponent);
+}
 
 MainMixer::~MainMixer()
 {
@@ -20,88 +31,88 @@ MainMixer::~MainMixer()
     removeAllChildren();
 }
 
-void MainMixer::createChannels() {
-    for (int input = 0; input < numInputChannels; input++) {
-        auto channel =inChannels.add(new Channel(input, inChannelNames[input]));
-        inputComponent.addAndMakeVisible(channel);
-        inputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
+void MainMixer::createBridgeDevices(juce::AudioIODeviceType* deviceType) {
+
+    auto inputDeviceNames = deviceType->getDeviceNames(true);
+    auto outputDeviceNames = deviceType->getDeviceNames(false);
+
+    for (const juce::String& name : inputDeviceNames) {
+        inputDevices.add(std::make_unique<JackDeviceBridge>(deviceType->createDevice(name, name), name, this, this));
+        addAndMakeVisible(inputDevices.getLast());
+        mixerBox.items.add(juce::FlexItem(*inputDevices.getLast()).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
     }
-    for (int output = 0; output < numOutputChannels; output++) {
-        auto channel = outChannels.add(new Channel(output, outChannelNames[output]));
-        outputComponent.addAndMakeVisible(channel);
-        outputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
+
+    for (const juce::String& name : outputDeviceNames) {
+        inputDevices.add(std::make_unique<JackDeviceBridge>(deviceType->createDevice(name, name), name, this, this));
+        addAndMakeVisible(outputDevices.getLast());
+        mixerBox.items.add(juce::FlexItem(*outputDevices.getLast()).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
     }
-   // setSize(DEVICE_CONTAINER_WIDTH, 500);
 }
 
 void MainMixer::resetChannelList()
 {
-    inChannelNames.clear();
-    outChannelNames.clear();
+    inputDevices.clear();
+    outputDevices.clear();
     inChannels.clear();
     outChannels.clear();
-
-    inputComponent.removeAllChildren();
-    outputComponent.removeAllChildren();
 }
 
-void MainMixer::audioDeviceAboutToStart(juce::AudioIODevice* device)
+void MainMixer::setupCallback(juce::StringArray inputChannelNames, juce::StringArray outputChannelNames, juce::Array<int> inputChannelIds, juce::Array<int> outputChannelIds)
 {
-    if (!inChannels.isEmpty()) { 
-        inChannels.clear();
-        inputComponent.removeAllChildren();
-    }
-    if (!outChannels.isEmpty()) { 
-        outChannels.clear(); 
-        outputComponent.removeAllChildren();
-
-    }
-
-    numInputChannels = device->getActiveInputChannels().countNumberOfSetBits();
-    inChannelNames = device->getInputChannelNames();
-
-    numOutputChannels = device->getActiveOutputChannels().countNumberOfSetBits();
-    outChannelNames = device->getOutputChannelNames();
-
-    createChannels();
+   // if (inputChannelNames.size() != numInputChannels) { DBG("JACK CALLBACK SETUP INPUT DEVICE MISMATCH"); }
+   // inChannelNames = inputChannelNames;
+   //
+   // if (outputChannelNames.size() != numOutputChannels) { DBG("JACK CALLBACK SETUP OUTPUT DEVICE MISMATCH"); }
+   // outChannelNames = outputChannelNames;
+   //
+   // createChannels();
 }
 
-void MainMixer::audioDeviceIOCallbackWithContext(
-    const float* const* inputChannelData, 
-    int numInputChannels, 
-    float* const* outputChannelData, 
-    int numOutputChannels, 
-    int numSamples, 
-    const juce::AudioIODeviceCallbackContext& context )
+void MainMixer::audioCallback(juce::AudioBuffer<float> inputData, int numInputChannels, juce::AudioBuffer<float> outputData, int numOutputChannels, int numSamples)
 {
     if (numInputChannels != inChannels.size()) {
         DBG("INPUT CHANNEL MISMATCH- IOCALLBACK INS: " + juce::String(numInputChannels) + "INCHANNELS INS : " + juce::String(inChannels.size()));
     }
 
-    juce::AudioBuffer<float> inputBuffer(const_cast<float**>(inputChannelData), numInputChannels, numSamples);
-
-    juce::AudioBuffer<float> outputBuffer(outputChannelData, numOutputChannels, numSamples);
-
     for (int channel = 0; channel < numInputChannels; ++channel)
     {
-        float* inputData = inputBuffer.getWritePointer(channel);
+        float* inWritePointer = inputData.getWritePointer(channel);
 
         if (inChannels[channel] != nullptr)
-            inChannels[channel]->process(inputData, numSamples);
-            float rms = inputBuffer.getRMSLevel(channel, 0, numSamples);
+            inChannels[channel]->process(inWritePointer, numSamples);
+            float rms = inputData.getRMSLevel(channel, 0, numSamples);
             inChannels[channel]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
-
     }
 
     for (int channel = 0; channel < numOutputChannels; ++channel)
     {
-        float* outputData = outputBuffer.getWritePointer(channel);
+        float* outWritePointer = outputData.getWritePointer(channel);
 
         if (outChannels[channel] != nullptr)
-            outChannels[channel]->process(outputData, numSamples);
-            float rms = outputBuffer.getRMSLevel(channel, 0, numSamples);
+            outChannels[channel]->process(outWritePointer, numSamples);
+            float rms = outputData.getRMSLevel(channel, 0, numSamples);
             outChannels[channel]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
     }
+}
+
+void MainMixer::audioDeviceAboutToStart(juce::AudioIODevice* device)
+{
+}
+
+void MainMixer::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
+{
+    for (int ch = 0; ch < numInputChannels && ch < inputBuffers.size(); ++ch) {
+        inputBuffers[ch].write(inputChannelData[ch], numSamples);
+    }
+
+    // Transfer output data from ring buffers to JUCE (written by JACK)
+    for (int ch = 0; ch < numOutputChannels && ch < outputBuffers.size(); ++ch) {
+        outputBuffers[ch].read(outputChannelData[ch], numSamples);
+    }
+}
+
+void MainMixer::audioDeviceStopped()
+{
 }
 
    // juce::AudioBuffer<float> inputBuffer(numInputChannels, numSamples);
@@ -120,33 +131,13 @@ void MainMixer::audioDeviceIOCallbackWithContext(
    // }
    //
 
-void MainMixer::audioDeviceStopped()
-{
-}
-
 void MainMixer::resized() {
     juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 10, getLocalBounds().getWidth(), 500);
- 
-    inputBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    inputBox.flexDirection = juce::FlexBox::Direction::row;
-    inputBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    inputBox.alignContent = juce::FlexBox::AlignContent::flexStart;
-
-    outputBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    outputBox.flexDirection = juce::FlexBox::Direction::row;
-    outputBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    outputBox.alignContent = juce::FlexBox::AlignContent::flexStart;
 
     mixerBox.flexWrap = juce::FlexBox::Wrap::noWrap;
     mixerBox.flexDirection = juce::FlexBox::Direction::column;
     mixerBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
     mixerBox.alignContent = juce::FlexBox::AlignContent::flexStart;
-    
-    inputBox.performLayout(inputComponent.getLocalBounds());
-    mixerBox.items.add(juce::FlexItem(inputComponent).withMinWidth(getLocalBounds().getWidth()).withMinHeight(250));
-
-    outputBox.performLayout(outputComponent.getLocalBounds());
-    mixerBox.items.add(juce::FlexItem(outputComponent).withMinWidth(getLocalBounds().getWidth()).withMinHeight(250));
 
     mixerBox.performLayout(fbRect);
 }

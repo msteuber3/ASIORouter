@@ -1,25 +1,32 @@
 #pragma once
 #include <RouterHeader.h>
+#include <JackAudioCallback.h>
 #include <Channel.h>
+#include <JackJuceBridge.h>
 #include <JuceHeader.h>
 
-class MainMixer : public juce::Component, public juce::AudioIODeviceCallback
+class MainMixer : public juce::Component, public JackAudioCallback //,  public juce::AudioIODeviceCallback    | Thought: It'd be pretty cool if I could make JackWrapper::AudioCallback a class that his inherits from
 {
 public:
 	MainMixer();
+	MainMixer(int numInputChannels, int numOutputChannels);
 	~MainMixer() override;
 
-	void createChannels();
+	void createBridgeDevices(juce::AudioIODeviceType* deviceType);
 
 	void resetChannelList();
+
+	void setupCallback(juce::StringArray inputChannelNames, juce::StringArray outputChannelNames, juce::Array<int> inputChannelIds, juce::Array<int> outputChannelIds) override;
+
+	void audioCallback(juce::AudioBuffer<float> inputData, int numInputChannels, juce::AudioBuffer<float> outputData, int numOutputChannels, int numSamples) override;
 
 	void audioDeviceAboutToStart(juce::AudioIODevice* device) override;
 
 	void audioDeviceIOCallbackWithContext(const float* const* inputChannelData,
-		int 	numInputChannels,
+		int numInputChannels,
 		float* const* outputChannelData,
-		int 	numOutputChannels,
-		int 	numSamples,
+		int numOutputChannels,
+		int numSamples,
 		const juce::AudioIODeviceCallbackContext& context) override;
 
 	void audioDeviceStopped() override;
@@ -28,16 +35,12 @@ public:
 
 private:
 	int numInputChannels = 0;
-	juce::StringArray inChannelNames;
+	juce::OwnedArray<JackDeviceBridge> inputDevices;
 
 	int numOutputChannels = 0;
-	juce::StringArray outChannelNames;
+	juce::OwnedArray<JackDeviceBridge> outputDevices;
 
 	juce::FlexBox mixerBox;
-	juce::Component inputComponent;
-	juce::FlexBox inputBox;
-	juce::Component outputComponent;
-	juce::FlexBox outputBox;
 
 	juce::OwnedArray<Channel> outChannels;
 	juce::OwnedArray<Channel> inChannels;

@@ -21,7 +21,7 @@ public:
 
 	//
 
-	void process(float* writePointer, int numSamples);
+	const float* process(float* writePointer, int numSamples);
 
 	void setRMSLevel(float rmsLevel);
 

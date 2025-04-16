@@ -12,15 +12,21 @@
 * figure out how to handle read only input buffers
 * extract channel name info from asio4all or figure out a workaround
 * figure out how to handle stereo ins
-* 
+*  more in depth audio io channel comparriosn testing - I think this only worked cause I turned on the headphones which were already enabled in a4a
 * Documentation
 * bug checking
 * 
+* 
+* 
+* With JACK, I want to get all ports and THEN worry about connections. Right now the concern is how to get ports. The JackRouter.ini file is probably the answer, but
+* how do I make a port? there's jack_port_register(client, 
 */
 std::unique_ptr<juce::AudioDeviceManager> deviceManager;
 
 MainComponent::MainComponent() : Component()
 {
+    jackClientName = "JuceJackRouter";
+    startJackServer();
     initializeDeviceManager();
     createMixer();
     createGuiElements();
@@ -34,31 +40,80 @@ MainComponent::MainComponent() : Component()
 
 MainComponent::~MainComponent() 
 {
-   deviceManager->removeAudioCallback(mixer.get());
    deviceManager->removeAllChangeListeners();
    deviceManager->closeAudioDevice();
    deviceManager.reset();
-   menuBar.reset();
-   removeAllChildren();
+  // menuBar.reset();
+   jack->stop();
+   //removeAllChildren();
+}
+
+void MainComponent::startJackServer()
+{
+    jack = std::make_unique<JackWrapper>(jackClientName);
+    bool result = jack->start();
+    if (!result) { DBG("Jack client failed to start"); }
 }
 
 void MainComponent::initializeDeviceManager() {
     deviceManager = std::make_unique<juce::AudioDeviceManager>();
     
     deviceManager->initialise(20, 20, nullptr, true, juce::String(), nullptr);
-    deviceManager->setCurrentAudioDeviceType(juce::String("ASIO"), true); //TODO: Add check here to make sure asio is installed
-    auto setup = std::make_unique<juce::AudioDeviceManager::AudioDeviceSetup>();
-    deviceManager->getAudioDeviceSetup(*setup);
-    setup->inputDeviceName = "ASIO4ALL v2";
-    setup->outputDeviceName = "ASIO4ALL v2";
-    deviceManager->setAudioDeviceSetup(*setup, true);
+
+    deviceManager->createAudioDeviceTypes(deviceTypes);
+
+    for (auto& type : deviceTypes)
+    {
+        type->scanForDevices();
+
+        DBG("Device type: " + type->getTypeName());
+        DBG("Devices: " + type->getDeviceNames().joinIntoString(", "));
+
+        if (type->getTypeName().containsIgnoreCase("jack")) // Look for "JACK"
+        {
+            deviceManager->setCurrentAudioDeviceType(type->getTypeName(), true);
+
+            juce::StringArray deviceNames = type->getDeviceNames(true); // true = input devices
+
+            juce::String deviceName;
+
+            if (deviceNames.size() > 0)
+            {
+                for (juce::String name : deviceNames)
+                {
+                    if (name.contains(jackClientName)) {
+                        deviceName = name;
+                    }
+                }
+            }
+            else {
+                deviceName = deviceNames[0];
+            }
+
+            juce::AudioDeviceManager::AudioDeviceSetup setup;
+            deviceManager->getAudioDeviceSetup(setup);
+            setup.inputDeviceName = deviceName;
+            setup.outputDeviceName = deviceName;
+            setup.useDefaultInputChannels = true;
+            setup.useDefaultOutputChannels = true;
+            DBG("Set device " + deviceName);
+            auto result = deviceManager->setAudioDeviceSetup(setup, true);
+            if (result != "")
+                 DBG("Failed to set JACK device: " + result);
+            
+
+            break;
+        }
+    }
 }
 
 void MainComponent::createMixer()
 {
-    mixer = std::make_unique<MainMixer>();
+    int jackIns = jack->getNumInputChannels();
+    int jackOuts = jack->getNumOutputChannels();
+    mixer = std::make_unique<MainMixer>(jackIns, jackOuts);
+    jack->setAudioCallback(mixer.get());
     addAndMakeVisible(*mixer);
-    deviceManager->addAudioCallback(mixer.get());
 }
 
 void MainComponent::createGuiElements() {
