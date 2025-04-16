@@ -5,11 +5,6 @@ MenuBar::MenuBar() : juce::MenuBarModel() {}
 MenuBar::~MenuBar() {}
 
 
-void MenuBar::setListener(MainComponentListener* l)
-{
-    parentListener = l; 
-}
-
 juce::StringArray MenuBar::getMenuBarNames()
 {
     return { "File", "Edit", "Options"};
@@ -47,11 +42,6 @@ void MenuBar::menuItemSelected(int menuItemID, int topLevelMenuIndex)
 void MenuBar::createPropertiesWindow()
 {
     auto* propertiesWindow = new PropertiesWindow();
-    propertiesWindow->setListener(this);
+    
 }
 
-void MenuBar::eventTriggered()
-{
-    if (parentListener != nullptr)
-        parentListener->mainComponentEventTriggered();
-}

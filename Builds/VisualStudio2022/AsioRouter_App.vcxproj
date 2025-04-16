@@ -154,8 +154,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp"/>
     <ClCompile Include="..\..\Source\JackJuceBridge.cpp"/>
-    <ClCompile Include="..\..\Source\PortManager.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesComponent.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp"/>
@@ -164,7 +164,6 @@
     <ClCompile Include="..\..\Source\MixerSource\VerticalMeter.cpp"/>
     <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\Source\MainComponent.cpp"/>
-    <ClCompile Include="..\..\Source\JackWrapper.cpp"/>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -2987,18 +2986,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Headers\JackJuceBridge.h"/>
-    <ClInclude Include="..\..\Headers\PortManager.h"/>
-    <ClInclude Include="..\..\Headers\JackAudioCallback.h"/>
     <ClInclude Include="..\..\Headers\Channel.h"/>
-    <ClInclude Include="..\..\Headers\CustomListener.h"/>
     <ClInclude Include="..\..\Headers\MainComponent.h"/>
+    <ClInclude Include="..\..\Headers\JuceAsioDevice.h"/>
     <ClInclude Include="..\..\Headers\MainMixer.h"/>
     <ClInclude Include="..\..\Headers\MenuBar.h"/>
-    <ClInclude Include="..\..\Headers\JackWrapper.h"/>
     <ClInclude Include="..\..\Headers\PropertiesComponent.h"/>
     <ClInclude Include="..\..\Headers\PropertiesWindow.h"/>
     <ClInclude Include="..\..\Headers\RouterHeader.h"/>
     <ClInclude Include="..\..\Headers\VerticalMeter.h"/>
+    <ClInclude Include="..\..\Headers\RingBuffer.h"/>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>

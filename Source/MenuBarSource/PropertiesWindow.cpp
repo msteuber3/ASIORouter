@@ -14,14 +14,7 @@ PropertiesWindow::PropertiesWindow()
 
 PropertiesWindow::~PropertiesWindow(){}
 
-void PropertiesWindow::setListener(CustomListener* newListener)
-{
-    listener = newListener;
-}
-
 void PropertiesWindow::closeButtonPressed()
 {
-    if (listener != nullptr)
-        listener->eventTriggered();
     delete this;
 }

@@ -6,27 +6,25 @@
     <GROUP id="{EBA70CA8-4366-8D16-0F41-57759F9FED7A}" name="Headers">
       <FILE id="GGkYUm" name="JackJuceBridge.h" compile="0" resource="0"
             file="Headers/JackJuceBridge.h"/>
-      <FILE id="sQze8r" name="PortManager.h" compile="0" resource="0" file="Headers/PortManager.h"/>
-      <FILE id="bom6X0" name="JackAudioCallback.h" compile="0" resource="0"
-            file="Headers/JackAudioCallback.h"/>
       <FILE id="MU9laJ" name="Channel.h" compile="0" resource="0" file="Headers/Channel.h"/>
-      <FILE id="VhdKzl" name="CustomListener.h" compile="0" resource="0"
-            file="Headers/CustomListener.h"/>
       <FILE id="alOw1m" name="MainComponent.h" compile="0" resource="0" file="Headers/MainComponent.h"/>
+      <FILE id="FpgbFp" name="JuceAsioDevice.h" compile="0" resource="0"
+            file="Headers/JuceAsioDevice.h"/>
       <FILE id="vQDTwh" name="MainMixer.h" compile="0" resource="0" file="Headers/MainMixer.h"/>
       <FILE id="qji3Cy" name="MenuBar.h" compile="0" resource="0" file="Headers/MenuBar.h"/>
-      <FILE id="Cltxen" name="JackWrapper.h" compile="0" resource="0" file="Headers/JackWrapper.h"/>
       <FILE id="yKkTcQ" name="PropertiesComponent.h" compile="0" resource="0"
             file="Headers/PropertiesComponent.h"/>
       <FILE id="rBnO3C" name="PropertiesWindow.h" compile="0" resource="0"
             file="Headers/PropertiesWindow.h"/>
       <FILE id="yROn08" name="RouterHeader.h" compile="0" resource="0" file="Headers/RouterHeader.h"/>
       <FILE id="M9mSd5" name="VerticalMeter.h" compile="0" resource="0" file="Headers/VerticalMeter.h"/>
+      <FILE id="l1o86N" name="RingBuffer.h" compile="0" resource="0" file="Headers/RingBuffer.h"/>
     </GROUP>
     <GROUP id="{C3AF3184-3A2E-A867-23EA-5C7D44DC79C5}" name="Source">
+      <FILE id="OJNNlQ" name="JuceAsioDevice.cpp" compile="1" resource="0"
+            file="Source/JuceAsioDevice.cpp"/>
       <FILE id="jlfazN" name="JackJuceBridge.cpp" compile="1" resource="0"
             file="Source/JackJuceBridge.cpp"/>
-      <FILE id="QumJxD" name="PortManager.cpp" compile="1" resource="0" file="Source/PortManager.cpp"/>
       <GROUP id="{44B61265-C382-0299-3009-4E2FC0FC223C}" name="MenuBarSource">
         <FILE id="nfQzWy" name="MenuBar.cpp" compile="1" resource="0" file="Source/MenuBarSource/MenuBar.cpp"/>
         <FILE id="gcKE2p" name="PropertiesComponent.cpp" compile="1" resource="0"
@@ -43,7 +41,6 @@
       <FILE id="YFlw9n" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="D8skfB" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
-      <FILE id="NNAdhd" name="JackWrapper.cpp" compile="1" resource="0" file="Source/JackWrapper.cpp"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

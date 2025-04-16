@@ -6,10 +6,7 @@
 Channel::Channel(int index, juce::String name)
 	: juce::Slider::Listener(), juce::Component(), juce::Timer(), index(index), rmsLevelSnapshot(0.f), name(name == "" ? "unkown" : name)
 {
-	startTimerHz(30);
-	createSlider(name);
-	addAndMakeVisible(verticalMeter);
-	setSize(SLIDER_WIDTH, 200);
+	
 }
 
 Channel::~Channel() 
@@ -21,11 +18,16 @@ Channel::~Channel()
 	removeAllChildren();
 }
 
-
+void Channel::createGUI()
+{
+	startTimerHz(30);
+	createSlider(name);
+	addAndMakeVisible(verticalMeter);
+	setSize(SLIDER_WIDTH, 200);
+}
 
 void Channel::createSlider(juce::String labelName)
 {
-
 	volumeSlider.setSliderStyle(juce::Slider::LinearVertical);
 	volumeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
 	volumeSlider.setRange(-60.0f, +6.f, 0.1f);
@@ -33,6 +35,7 @@ void Channel::createSlider(juce::String labelName)
 	volumeSlider.setVelocityBasedMode(false);
 	volumeSlider.addListener(this);
 	addAndMakeVisible(volumeSlider);
+
 	volume = juce::Decibels::decibelsToGain(volumeSlider.getValue());
 
 	volumeLabel.setText(labelName, juce::dontSendNotification);
@@ -44,15 +47,6 @@ void Channel::sliderValueChanged(juce::Slider* slider)
 {
 	volumeSlider.setValue(volumeSlider.getValue(), juce::dontSendNotification);
 	volume = juce::Decibels::decibelsToGain(volumeSlider.getValue());
-}
-
-int Channel::getXCoord() {
-	return index * 100;
- }
-// Height is 150 for the slider, 50 for the label
-// Width is 100 for both
-int Channel::getYCoord() {
-	return 200 + 50;
 }
 
 void Channel::resized()
@@ -72,7 +66,6 @@ const float* Channel::process(float* writePointer, int numSamples)
 	}
 	const float* postData = writePointer;
 	return postData;
-
 }
 
 void Channel::setRMSLevel(float rmsLevel) {

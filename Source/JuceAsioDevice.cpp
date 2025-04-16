@@ -1,109 +1,71 @@
 /*
   ==============================================================================
 
-    JackRouterManager.cpp
-    Created: 15 Apr 2025 9:47:37pm
+    JuceAsioDevice.cpp
+    Created: 16 Apr 2025 7:41:16am
     Author:  Michael
 
   ==============================================================================
 */
 
-#include "JackJuceBridge.h"
+#include <JuceAsioDevice.h>
 
-JackDeviceBridge::JackDeviceBridge(juce::AudioIODevice* juceAudioDevice, jack_client_t* jackClient, const char* jackClientName) :
+JuceAsioDevice::JuceAsioDevice(juce::AudioIODevice* juceIODevice) : 
     juce::Component(),
     juce::AudioIODeviceCallback(),
-    clientName(jackClientName),
-    deviceName(juceAudioDevice->getName()),
-    juceAudioDevice(juceAudioDevice),
-    jackClient(jackClient)
+    juceAudioDevice(juceIODevice)
 {
-    if (jackClient == nullptr) {
-        DBG("Failed to create JACK client " + juce::String(jackClientName));
-        return;
-    }
-
     if (juceAudioDevice) {
+       
         auto inputChannels = juceAudioDevice->getInputChannelNames();
         auto outputChannels = juceAudioDevice->getOutputChannelNames();
 
-        if(!inputChannels.isEmpty()) 
-            createInputBridges(inputChannels);
+        if (!inputChannels.isEmpty())
+            createInputChannels(inputChannels);
 
-        if (!outputChannels.isEmpty())
-            createOutputs(outputChannels);
-        
-        // Set JACK process callback
-        jack_set_process_callback(jackClient, jackProcessCallback, this);
+        if (!inputChannels.isEmpty())
+            createOutputChannels(outputChannels);
 
-        // Start JUCE device
         juceAudioDevice->open(inputChannels.size(), outputChannels.size(),
             juceAudioDevice->getCurrentSampleRate(),
             juceAudioDevice->getCurrentBufferSizeSamples());
         juceAudioDevice->start(this);
-
-        // Activate JACK client
-        if (jack_activate(jackClient) == 0) {
-            DBG("JACK client " + juce::String(jackClientName) + " activated successfully");
-        }
     }
 }
 
-JackDeviceBridge::JackDeviceBridge(juce::AudioIODevice* juceAudioDevice)
-{}
-
-JackDeviceBridge::~JackDeviceBridge() {
+JuceAsioDevice::~JuceAsioDevice()
+{
     if (juceAudioDevice) {
         juceAudioDevice->stop();
         juceAudioDevice->close();
     }
-
-    if (jackClient) {
-        jack_deactivate(jackClient);
-        jack_client_close(jackClient);
-    }
 }
 
-void JackDeviceBridge::createInputBridges(juce::StringArray channelNames)
+void JuceAsioDevice::createInputChannels(juce::StringArray channelNames)
 {
     inputBuffers.reserve(channelNames.size());
 
     for (int inputId = 0; inputId < channelNames.size(); ++inputId) {
-        juce::String portName = channelNames[inputId] + "_in_" + juce::String(inputId);
-        auto port = jack_port_register(jackClient,
-            portName.toRawUTF8(),
-            JACK_DEFAULT_AUDIO_TYPE,
-            JackPortIsOutput,
-            0);
-        inputPortMap[inputId] = port;
-
-        inputChannelMap[inputId] = std::make_unique<Channel>(inputId, portName);
-
+        inputChannelMap[inputId] = std::make_unique<Channel>(inputId, channelNames[inputId]);
         inputBuffers.push_back(std::make_unique<RingBuffer<float>>(4096));
     }
 }
 
-void JackDeviceBridge::createOutputs(juce::StringArray channelNames)
+void JuceAsioDevice::createOutputChannels(juce::StringArray channelNames)
 {
     outputBuffers.reserve(channelNames.size());
 
     for (int outputId = 0; outputId < channelNames.size(); ++outputId) {
-        juce::String portName = channelNames[outputId] + "_in_" + juce::String(outputId);
-        auto port = jack_port_register(jackClient,
-            portName.toRawUTF8(),
-            JACK_DEFAULT_AUDIO_TYPE,
-            JackPortIsInput,
-            0);
-        outputPortMap[outputId] = port;
-
-        outputChannelMap[outputId] = std::make_unique<Channel>(outputId, portName);
-
+        outputChannelMap[outputId] = std::make_unique<Channel>(outputId, channelNames[outputId]);
         outputBuffers.push_back(std::make_unique<RingBuffer<float>>(4096));
     }
 }
 
-void JackDeviceBridge::createGUI()
+void JuceAsioDevice::createGUI()
 {
+    addAndMakeVisible(inputComponent);
+    addAndMakeVisible(outputComponent);
+
     if (!inputChannelMap.empty()) {
         for (auto& [id, channel] : inputChannelMap) {
             channel->createGUI();
@@ -120,46 +82,11 @@ void JackDeviceBridge::createGUI()
     }
 }
 
-// JACK process callback (static wrapper)
-int JackDeviceBridge::jackProcessCallback(jack_nframes_t nframes, void* arg) {
-    return static_cast<JackDeviceBridge*>(arg)->processJack(nframes);
+void JuceAsioDevice::audioDeviceAboutToStart(juce::AudioIODevice* device)
+{
 }
 
-// JACK process implementation
-int JackDeviceBridge::processJack(jack_nframes_t nframes) {
-
-    // For each input channel (JUCE input → JACK output)
-    for (auto& pair : inputPortMap) {
-        int channel = pair.first;
-        jack_port_t* port = pair.second;
-
-        float* jackBuffer = (float*)jack_port_get_buffer(port, nframes);
-
-        // Get data from ring buffer (filled by JUCE callback)
-        if (channel < inputBuffers.size()) {
-            inputBuffers[channel]->read(jackBuffer, nframes);
-        }
-    }
-
-    // For each output channel (JACK input → JUCE output)
-    for (auto& pair : outputPortMap) {
-        int channel = pair.first;
-        jack_port_t* port = pair.second;
-
-        float* jackBuffer = (float*)jack_port_get_buffer(port, nframes);
-
-        // Write to ring buffer (to be read by JUCE callback)
-        if (channel < outputBuffers.size()) {
-            outputBuffers[channel]->write(jackBuffer, nframes);
-        }
-    }
-
-    return 0;
-}
-
-void JackDeviceBridge::audioDeviceAboutToStart(juce::AudioIODevice* device) {}
-
-void JackDeviceBridge::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
+void JuceAsioDevice::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
 {
     for (int ch = 0; ch < numInputChannels && ch < inputBuffers.size(); ++ch) {
 
@@ -175,16 +102,16 @@ void JackDeviceBridge::audioDeviceIOCallbackWithContext(const float* const* inpu
 
         inputBuffers[ch]->write(processedData, numSamples);
     }
-
-    // Transfer output data from ring buffers to JUCE (written by JACK)
     for (int ch = 0; ch < numOutputChannels && ch < outputBuffers.size(); ++ch) {
         outputBuffers[ch]->read(outputChannelData[ch], numSamples);
     }
 }
 
-void JackDeviceBridge::audioDeviceStopped() {}
+void JuceAsioDevice::audioDeviceStopped()
+{
+}
 
-void JackDeviceBridge::resized()
+void JuceAsioDevice::resized()
 {
     juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 10, getLocalBounds().getWidth(), 500);
 
@@ -211,4 +138,3 @@ void JackDeviceBridge::resized()
 
     deviceBox.performLayout(fbRect);
 }
-

@@ -9,17 +9,13 @@ public:
 	Channel(int index, juce::String name);
 	~Channel() override;
 
+	void createGUI();
+
 	void createSlider(juce::String labelName);
 
 	void sliderValueChanged(juce::Slider* slider) override;
 
-	int getXCoord();
-
-	int getYCoord();
-
 	void resized() override;
-
-	//
 
 	const float* process(float* writePointer, int numSamples);
 
@@ -27,13 +23,13 @@ public:
 
 	void timerCallback() override;
 
-	//
-
 private:
 	int index;
+	
 	juce::Slider volumeSlider;
 	juce::Label volumeLabel;
-	float volume;
+
+	float volume = 0;
 
 	juce::String name;
 

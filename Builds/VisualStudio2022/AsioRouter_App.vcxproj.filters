@@ -709,10 +709,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\JackJuceBridge.cpp">
+    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp">
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\PortManager.cpp">
+    <ClCompile Include="..\..\Source\JackJuceBridge.cpp">
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp">
@@ -737,9 +737,6 @@
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MainComponent.cpp">
-      <Filter>AsioRouter\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\JackWrapper.cpp">
       <Filter>AsioRouter\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
@@ -3744,28 +3741,19 @@
     <ClInclude Include="..\..\Headers\JackJuceBridge.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Headers\PortManager.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Headers\JackAudioCallback.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Headers\Channel.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Headers\CustomListener.h">
+    <ClInclude Include="..\..\Headers\MainComponent.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Headers\MainComponent.h">
+    <ClInclude Include="..\..\Headers\JuceAsioDevice.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\MainMixer.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\MenuBar.h">
-      <Filter>AsioRouter\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Headers\JackWrapper.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\PropertiesComponent.h">
@@ -3778,6 +3766,9 @@
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Headers\VerticalMeter.h">
+      <Filter>AsioRouter\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Headers\RingBuffer.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
