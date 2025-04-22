@@ -12,15 +12,19 @@ public:
     MainComponent();
     ~MainComponent() override;
 
-    void initializeDeviceManager();
+    bool initializeDeviceManager();
 
-    void createMixer(juce::AudioIODeviceType* deviceType);
-    
+    void createMixer();
+
     void resized() override;
 
     void createGuiElements();
+
+    void paint(juce::Graphics& g) override;
+
     
 private:
+    juce::String deviceTypeToRetrieve;
 
     juce::FlexBox mainFlexBox;
 
@@ -30,7 +34,6 @@ private:
 
     std::unique_ptr<MainMixer> mixer;
     
-    juce::OwnedArray<juce::AudioIODeviceType> deviceTypes;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

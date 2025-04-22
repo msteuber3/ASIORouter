@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    JuceAsioDevice.h
-    Created: 16 Apr 2025 7:41:16am
+    JuceWASPIDevice.h
+    Created: 17 Apr 2025 10:24:19pm
     Author:  Michael
 
   ==============================================================================
@@ -15,17 +15,20 @@
 #include <Channel.h>
 
 
-class JuceAsioDevice : public juce::GroupComponent, public juce::AudioIODeviceCallback {
+class JuceWASAPIDevice : public juce::GroupComponent, public juce::AudioIODeviceCallback {
 public:
-    JuceAsioDevice(juce::AudioIODevice* juceIODevice);
-
-    ~JuceAsioDevice() override;
+    JuceWASAPIDevice(juce::AudioIODevice* juceIODevice, bool isInput);
+    ~JuceWASAPIDevice() override;
 
     void createGUI();
 
-    void createInputChannels(juce::StringArray channelNames);
+    juce::String getFullDeviceName();
 
-    void createOutputChannels(juce::StringArray channelNames);
+    juce::String getShortDeviceName();
+
+    void renameDevice(juce::String newName);
+
+    void createChannels(juce::StringArray channelNames);
 
     std::unique_ptr<juce::AudioIODevice>& getAudioDevice();
 
@@ -42,23 +45,27 @@ public:
 
     int calculatePreferredWidth();
 
+    int getNumChannels();
+
     juce::Point<float> getPreferredSize();
 
     void resized() override;
 
 private:
+    bool isInput;
+
+    juce::String name;
+
     std::unique_ptr<juce::AudioIODevice> juceAudioDevice;
 
-    std::map<int, std::unique_ptr<Channel>> inputChannelMap;
-    std::map<int, std::unique_ptr<Channel>> outputChannelMap;
+    std::map<int, std::unique_ptr<Channel>> channelMap;
 
-    std::vector< std::unique_ptr<RingBuffer<float>>> inputBuffers;
-    std::vector< std::unique_ptr<RingBuffer<float>>> outputBuffers;
+    std::vector< std::unique_ptr<RingBuffer<float>>> buffers;
 
     juce::Label deviceLabel;
-    juce::Label inputSectionLabel;
-    juce::Label outputSectionLabel;
+ 
+    
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(JuceAsioDevice)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(JuceWASAPIDevice)
 
 };

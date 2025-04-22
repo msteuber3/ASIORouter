@@ -3,10 +3,15 @@
 
 // Alternate approach: Make each channel a bus instead of a processor and let the user instantiate as many processors as they want. This way it does make a processor for each track. 
 // Make one global processor(?) and route all audio through that (???) I just dont know if you can chain specific in channels to specific out channels
-Channel::Channel(int index, juce::String name)
-	: juce::Slider::Listener(), juce::Component(), juce::Timer(), index(index), rmsLevelSnapshot(0.f), name(name == "" ? "unkown" : name)
+Channel::Channel(int index, juce::String channelName)
+	: juce::Slider::Listener(), juce::Component(), juce::Timer(), index(index), rmsLevelSnapshot(0.f), name(channelName == "" ? "unkown" : channelName)
 {
-	
+	addAndMakeVisible(verticalMeter);
+	createSlider();
+	startTimerHz(30);
+
+	setSize(SLIDER_WIDTH, 200);
+
 }
 
 Channel::~Channel() 
@@ -18,16 +23,9 @@ Channel::~Channel()
 	removeAllChildren();
 }
 
-void Channel::createGUI()
+void Channel::createSlider()
 {
-	startTimerHz(30);
-	createSlider(name);
-	addAndMakeVisible(verticalMeter);
-	setSize(SLIDER_WIDTH, 200);
-}
 
-void Channel::createSlider(juce::String labelName)
-{
 	volumeSlider.setSliderStyle(juce::Slider::LinearVertical);
 	volumeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
 	volumeSlider.setRange(-60.0f, +6.f, 0.1f);
@@ -38,7 +36,7 @@ void Channel::createSlider(juce::String labelName)
 
 	volume = juce::Decibels::decibelsToGain(volumeSlider.getValue());
 
-	volumeLabel.setText(labelName, juce::dontSendNotification);
+	volumeLabel.setText(name, juce::dontSendNotification);
 	volumeLabel.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(volumeLabel);
 }
@@ -61,7 +59,7 @@ void Channel::resized()
 
 const float* Channel::process(float* writePointer, int numSamples)
 {
-		for (int i = 0; i < numSamples; i++) {
+	for (int i = 0; i < numSamples; i++) {
 		writePointer[i] *= volume;
 	}
 	const float* postData = writePointer;

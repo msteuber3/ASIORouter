@@ -9,9 +9,7 @@ public:
 	Channel(int index, juce::String name);
 	~Channel() override;
 
-	void createGUI();
-
-	void createSlider(juce::String labelName);
+	void createSlider();
 
 	void sliderValueChanged(juce::Slider* slider) override;
 
@@ -24,6 +22,8 @@ public:
 	void timerCallback() override;
 
 private:
+
+
 	int index;
 	
 	juce::Slider volumeSlider;

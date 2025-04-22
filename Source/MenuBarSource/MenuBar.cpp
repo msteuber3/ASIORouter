@@ -13,6 +13,7 @@ juce::StringArray MenuBar::getMenuBarNames()
 juce::PopupMenu MenuBar::getMenuForIndex(int topLevelMenuIndex, const juce::String& menuName)
 {
     juce::PopupMenu menu;
+    juce::PopupMenu removeDevicesMenu;
 
     switch (topLevelMenuIndex)
     {
@@ -24,10 +25,9 @@ juce::PopupMenu MenuBar::getMenuForIndex(int topLevelMenuIndex, const juce::Stri
         break;
 
     case 1: // Edit
-        menu.addItem("Undo", [] { /* handle undo */ });
-        menu.addItem("Redo", [] { /* handle redo */ });
+        menu.addSubMenu("Remove Devices", removeDevicesMenu, false); // TODO
         break;
-    case 2:
+    case 2: //Options
         menu.addItem("Properties", [this] { createPropertiesWindow(); });
         break;
     
@@ -44,4 +44,6 @@ void MenuBar::createPropertiesWindow()
     auto* propertiesWindow = new PropertiesWindow();
     
 }
+
+void MenuBar::removeDevices() {}
 

@@ -154,14 +154,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp"/>
-    <ClCompile Include="..\..\Source\JackJuceBridge.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\MenuBar.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesComponent.cpp"/>
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\Channel.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\MainMixer.cpp"/>
+    <ClCompile Include="..\..\Source\JuceWASAPIDevice.cpp"/>
+    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp"/>
+    <ClCompile Include="..\..\Source\JackJuceBridge.cpp"/>
     <ClCompile Include="..\..\Source\MixerSource\VerticalMeter.cpp"/>
+    <ClCompile Include="..\..\Source\JuceWASAPIDeviceContainer.cpp"/>
     <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\Source\MainComponent.cpp"/>
     <ClCompile Include="..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
@@ -2990,8 +2992,10 @@
     <ClInclude Include="..\..\Headers\MainComponent.h"/>
     <ClInclude Include="..\..\Headers\JuceAsioDevice.h"/>
     <ClInclude Include="..\..\Headers\MainMixer.h"/>
+    <ClInclude Include="..\..\Headers\JuceWASAPIDeviceContainer.h"/>
     <ClInclude Include="..\..\Headers\MenuBar.h"/>
     <ClInclude Include="..\..\Headers\PropertiesComponent.h"/>
+    <ClInclude Include="..\..\Headers\JuceWASAPIDevice.h"/>
     <ClInclude Include="..\..\Headers\PropertiesWindow.h"/>
     <ClInclude Include="..\..\Headers\RouterHeader.h"/>
     <ClInclude Include="..\..\Headers\VerticalMeter.h"/>

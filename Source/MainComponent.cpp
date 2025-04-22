@@ -17,75 +17,43 @@
 * With JACK, I want to get all ports and THEN worry about connections. Right now the concern is how to get ports. The JackRouter.ini file is probably the answer, but
 * how do I make a port? there's jack_port_register(client, 
 */
-std::unique_ptr<juce::AudioDeviceManager> deviceManager;
 
 MainComponent::MainComponent() : juce::Component()
-{
-    initializeDeviceManager();
+{   
+    createMixer();
+    createGuiElements();
     setSize(2000, 800); //TODO: Automatically reset size to match number of devices
 }
 
 MainComponent::~MainComponent() 
 {
-   deviceManager->removeAllChangeListeners();
-   if (deviceManager->getCurrentAudioDevice()) {
-       deviceManager->closeAudioDevice();
-   }
-   deviceManager.reset();
    menuBar.reset();
    removeAllChildren();
 }
 
-void MainComponent::initializeDeviceManager() {
-    deviceManager = std::make_unique<juce::AudioDeviceManager>();
-    
-    deviceManager->initialise(20, 20, nullptr, true, juce::String(), nullptr);
-    deviceManager->createAudioDeviceTypes(deviceTypes);
-
-    for (auto type : deviceTypes)
-    {       
-        DBG("Device type: " + type->getTypeName());
-
-        if (type->getTypeName().containsIgnoreCase("asio")) 
-        {
-            type->scanForDevices();
-            deviceManager->setCurrentAudioDeviceType(type->getTypeName(), true);
-            createMixer(type);
-            break;
-        }
-    }
-}
-
-void MainComponent::createMixer(juce::AudioIODeviceType* deviceType)
+void MainComponent::createMixer()
 {
     mixer = std::make_unique<MainMixer>();
-    mixer->createJuceDevices(deviceType);
 }
 
 void MainComponent::createGuiElements() {
 
     menuBar.reset(new juce::MenuBarComponent(&menuModel));
-    addAndMakeVisible(*menuBar);
-    mixer->createGUI();
-    addAndMakeVisible(*mixer);
+
+    addAndMakeVisible(menuBar.get());
+    addAndMakeVisible(mixer.get());
+
+    mainFlexBox.flexDirection = juce::FlexBox::Direction::column;
+    mainFlexBox.items.add(juce::FlexItem(*menuBar).withHeight(30.0f).withFlex(0));
+    mainFlexBox.items.add(juce::FlexItem(*mixer).withFlex(1.0f));
+}
+
+void MainComponent::paint(juce::Graphics& g)
+{
+    g.fillAll(juce::Colours::black);
 }
 
 void MainComponent::resized() {
-    createGuiElements();
-
-    addAndMakeVisible(*mixer);
-
-    //textLabel.setBounds(10, 10, getWidth() - 20, 20);
-    //audioDrivers.setBounds(10, 40, getWidth() - 20, 20);
-    menuBar->setBounds(0, 0, getWidth(), 25);
-    mainFlexBox.items.add(juce::FlexItem(*mixer).withMinWidth(getWidth()).withMinHeight(800));
-
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 30, getWidth(), getHeight());
-
-    mainFlexBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    mainFlexBox.flexDirection = juce::FlexBox::Direction::row;
-    mainFlexBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    mainFlexBox.alignContent = juce::FlexBox::AlignContent::flexStart;
-
-    mainFlexBox.performLayout(fbRect);
+    auto bounds = getLocalBounds();
+    mainFlexBox.performLayout(bounds);
 }

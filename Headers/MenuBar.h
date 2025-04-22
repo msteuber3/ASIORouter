@@ -16,6 +16,7 @@ public:
 
 	void createPropertiesWindow();
 
-private:
+	void removeDevices();
 
+private:
 };

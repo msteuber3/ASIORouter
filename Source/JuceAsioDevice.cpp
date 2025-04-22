@@ -11,11 +11,21 @@
 #include <JuceAsioDevice.h>
 
 JuceAsioDevice::JuceAsioDevice(juce::AudioIODevice* juceIODevice) : 
-    juce::Component(),
+    juce::GroupComponent(juce::String(juceIODevice->getName() + " Control Panel"), juceIODevice->getName()),
     juce::AudioIODeviceCallback(),
     juceAudioDevice(juceIODevice)
 {
+    createGUI();
+
     if (juceAudioDevice) {
+        auto sampleRates = juceAudioDevice->getAvailableSampleRates();
+        auto bufferSizes = juceAudioDevice->getAvailableBufferSizes();
+
+        auto sampleRate = sampleRates.isEmpty() ? 44100.0 : sampleRates[0];
+        auto bufferSize = bufferSizes.isEmpty() ? 512 : bufferSizes[0];
+
+        juceAudioDevice->open(2, 0, sampleRate, bufferSize);
+        juceAudioDevice->start(this);
        
         auto inputChannels = juceAudioDevice->getInputChannelNames();
         auto outputChannels = juceAudioDevice->getOutputChannelNames();
@@ -25,12 +35,9 @@ JuceAsioDevice::JuceAsioDevice(juce::AudioIODevice* juceIODevice) :
 
         if (!inputChannels.isEmpty())
             createOutputChannels(outputChannels);
-
-        juceAudioDevice->open(inputChannels.size(), outputChannels.size(),
-            juceAudioDevice->getCurrentSampleRate(),
-            juceAudioDevice->getCurrentBufferSizeSamples());
-        juceAudioDevice->start(this);
     }
+    setSize(calculatePreferredWidth(), 500);
+
 }
 
 JuceAsioDevice::~JuceAsioDevice()
@@ -41,12 +48,30 @@ JuceAsioDevice::~JuceAsioDevice()
     }
 }
 
+void JuceAsioDevice::createGUI()
+{
+    deviceLabel.setText(juceAudioDevice->getName(), juce::dontSendNotification);
+    deviceLabel.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(deviceLabel);
+
+    inputSectionLabel.setText("Inputs", juce::dontSendNotification);
+    inputSectionLabel.setFont(juce::Font(14.0f, juce::Font::bold));
+    inputSectionLabel.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(inputSectionLabel);
+
+    outputSectionLabel.setText("Outputs", juce::dontSendNotification);
+    outputSectionLabel.setFont(juce::Font(14.0f, juce::Font::bold));
+    outputSectionLabel.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(outputSectionLabel);
+}
+
 void JuceAsioDevice::createInputChannels(juce::StringArray channelNames)
 {
     inputBuffers.reserve(channelNames.size());
 
     for (int inputId = 0; inputId < channelNames.size(); ++inputId) {
         inputChannelMap[inputId] = std::make_unique<Channel>(inputId, channelNames[inputId]);
+        addAndMakeVisible(inputChannelMap[inputId].get());
         inputBuffers.push_back(std::make_unique<RingBuffer<float>>(4096));
     }
 }
@@ -57,34 +82,17 @@ void JuceAsioDevice::createOutputChannels(juce::StringArray channelNames)
 
     for (int outputId = 0; outputId < channelNames.size(); ++outputId) {
         outputChannelMap[outputId] = std::make_unique<Channel>(outputId, channelNames[outputId]);
+        addAndMakeVisible(outputChannelMap[outputId].get());
         outputBuffers.push_back(std::make_unique<RingBuffer<float>>(4096));
     }
 }
 
-void JuceAsioDevice::createGUI()
+std::unique_ptr<juce::AudioIODevice>& JuceAsioDevice::getAudioDevice()
 {
-    addAndMakeVisible(inputComponent);
-    addAndMakeVisible(outputComponent);
-
-    if (!inputChannelMap.empty()) {
-        for (auto& [id, channel] : inputChannelMap) {
-            channel->createGUI();
-            inputComponent.addAndMakeVisible(*channel);
-            inputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
-        }
-    }
-    if (!outputChannelMap.empty()) {
-        for (auto& [id, channel] : outputChannelMap) {
-            channel->createGUI();
-            outputComponent.addAndMakeVisible(*channel);
-            outputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
-        }
-    }
+    return juceAudioDevice;
 }
 
-void JuceAsioDevice::audioDeviceAboutToStart(juce::AudioIODevice* device)
-{
-}
+void JuceAsioDevice::audioDeviceAboutToStart(juce::AudioIODevice* device) {}
 
 void JuceAsioDevice::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
 {
@@ -107,34 +115,82 @@ void JuceAsioDevice::audioDeviceIOCallbackWithContext(const float* const* inputC
     }
 }
 
-void JuceAsioDevice::audioDeviceStopped()
+void JuceAsioDevice::audioDeviceStopped() {}
+
+int JuceAsioDevice::calculatePreferredWidth()
 {
+    return juce::jmax((int)inputChannelMap.size(), (int)outputChannelMap.size()) * SLIDER_WIDTH + 20;
+}
+
+juce::Point<float> JuceAsioDevice::getPreferredSize() 
+{
+    float width = (float)calculatePreferredWidth();
+    float height = 300; // Fixed height or calculate based on needs
+    return { width, height };
 }
 
 void JuceAsioDevice::resized()
 {
-    juce::Rectangle<int> fbRect = juce::Rectangle<int>(0, 10, getLocalBounds().getWidth(), 500);
+    auto bounds = getLocalBounds().reduced(10);
 
-    inputBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    inputBox.flexDirection = juce::FlexBox::Direction::row;
-    inputBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    inputBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+    //JUCE GRIDS WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
-    outputBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    outputBox.flexDirection = juce::FlexBox::Direction::row;
-    outputBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    outputBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+    using Track = juce::Grid::TrackInfo;
+    using Fr = juce::Grid::Fr;
+    using Px = juce::Grid::Px;
+   
+    juce::Grid grid;
 
-    deviceBox.flexWrap = juce::FlexBox::Wrap::noWrap;
-    deviceBox.flexDirection = juce::FlexBox::Direction::column;
-    deviceBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    deviceBox.alignContent = juce::FlexBox::AlignContent::flexStart;
+    // Define grid settings
+    grid.rowGap = Px(10);
+    grid.columnGap = Px(5);
 
-    inputBox.performLayout(inputComponent.getLocalBounds());
-    deviceBox.items.add(juce::FlexItem(inputComponent).withMinWidth(getLocalBounds().getWidth()).withMinHeight(250));
+    // Define some templates for our grid
 
-    outputBox.performLayout(outputComponent.getLocalBounds());
-    deviceBox.items.add(juce::FlexItem(outputComponent).withMinWidth(getLocalBounds().getWidth()).withMinHeight(250));
+    // Calculate number of columns needed: max of input and output channel counts
+    const int numColumns = juce::jmax(inputChannelMap.size(), outputChannelMap.size());
 
-    deviceBox.performLayout(fbRect);
+    // Setup rows (device name, inputs label, input channels, outputs label, output channels)
+    grid.templateRows = { 
+        Track(Px(30)), // device name 
+        Track(Px(20)), // Inputs label
+        Track(Px(200)), //input channels
+        Track(Px(20)), //outputs label
+        Track(Px(200)) }; //output channels
+
+    // Setup columns - one for each channel
+    juce::Array<Track> columnTracks;
+    for (int i = 0; i < numColumns; ++i)
+        columnTracks.add(Track(Px(SLIDER_WIDTH)));
+
+    grid.templateColumns = columnTracks;
+
+    // Create a Grid Item for each component
+
+    // Device label (spans all columns)
+    auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1, 2, numColumns + 1);
+    grid.items.add(deviceLabelItem);
+
+    // Input section label (spans all columns)
+    auto inputLabelItem = juce::GridItem(inputSectionLabel).withArea(2, 1, 3, numColumns + 1);
+    grid.items.add(inputLabelItem);
+
+    // Input channels
+    for (auto& [id, channel] : inputChannelMap) {
+        auto channelItem = juce::GridItem(*channel).withArea(3, id + 1, 4, id + 2);
+        grid.items.add(channelItem);
+    }
+
+    // Output section label (spans all columns)
+    auto outputLabelItem = juce::GridItem(outputSectionLabel).withArea(4, 1, 5, numColumns + 1);
+    grid.items.add(outputLabelItem);
+
+    // Output channels
+    for (auto& [id, channel] : outputChannelMap) {
+        auto channelItem = juce::GridItem(*channel).withArea(5, id + 1, 6, id + 2);
+        grid.items.add(channelItem);
+    }
+
+    // Perform layout
+    grid.performLayout(bounds);
 }

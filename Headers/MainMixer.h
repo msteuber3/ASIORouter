@@ -2,6 +2,7 @@
 #include <RouterHeader.h>
 #include <Channel.h>
 #include <JuceAsioDevice.h>
+#include <JuceWASAPIDeviceContainer.h>
 #include <JackJuceBridge.h>
 #include <JuceHeader.h>
 
@@ -11,13 +12,25 @@ public:
 	MainMixer();
 	~MainMixer() override;
 
-	void createJuceDevices(juce::AudioIODeviceType* deviceType);
+	bool generateDeviceType();
 
-	void createBridgeDevices(juce::AudioIODeviceType* deviceType);
+	void createWASAPIDevices();
 
-	void createGUI();
+	void createASIODevices();
+
+	void createBridgeDevices();
 
 	void createBridgeGUI();
+	
+	void calculatePreferredSize();
+
+	void deleteDevice(int index);
+
+	void handleDeviceNotFound();
+
+	juce::Point<float> getPreferredSize() const;
+
+	void paint(juce::Graphics& g) override;
 
 	void resized() override;
 
@@ -29,7 +42,13 @@ private:
 
 	juce::FlexBox mixerBox;
 
-	juce::OwnedArray<Channel> outChannels;
-	juce::OwnedArray<Channel> inChannels;
+	juce::Point<float> preferredSize;
 
+	std::unique_ptr<juce::AudioIODeviceType> deviceType;
+
+	std::unique_ptr<JuceWASAPIDeviceContainer> WASAPIContainer;
+
+	juce::Label deviceNotFoundLabel;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainMixer)
 };

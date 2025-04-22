@@ -106,14 +106,12 @@ void JackDeviceBridge::createGUI()
 {
     if (!inputChannelMap.empty()) {
         for (auto& [id, channel] : inputChannelMap) {
-            channel->createGUI();
             inputComponent.addAndMakeVisible(*channel);
             inputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
         }
     }
     if (!outputChannelMap.empty()) {
         for (auto& [id, channel] : outputChannelMap) {
-            channel->createGUI();
             outputComponent.addAndMakeVisible(*channel);
             outputBox.items.add(juce::FlexItem(*channel).withMinWidth(SLIDER_WIDTH).withMinHeight(200.0f));
         }
