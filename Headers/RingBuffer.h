@@ -150,6 +150,10 @@ public:
         return mSize;
     }
 
+    T* getBuffer() {
+        return mBuffer;
+    }
+
 private:
     T* mBuffer;                      // Actual buffer data
     size_t mSize;                    // Buffer size (power of 2)

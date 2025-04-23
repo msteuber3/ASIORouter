@@ -57,3 +57,4 @@ void MainComponent::resized() {
     auto bounds = getLocalBounds();
     mainFlexBox.performLayout(bounds);
 }
+// NOTE FOR FUTURE ME: if jack works, it requires the command regsvr32 "C:\Program Files\JACK2\jack-router\win64\JackRouter.dll"

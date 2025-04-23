@@ -26,8 +26,23 @@ JuceWASAPIDevice::JuceWASAPIDevice(juce::AudioIODevice* juceIODevice, bool isInp
         auto sampleRate = sampleRates.isEmpty() ? 44100.0 : sampleRates[0];
         auto bufferSize = bufferSizes.isEmpty() ? 512 : bufferSizes[0];       // Check this later
 
-        juceAudioDevice->open(2, 0, sampleRate, bufferSize);
+        int requestedInChannels = juceAudioDevice->getInputChannelNames().size();
+        int requestedOutChannels = juceAudioDevice->getOutputChannelNames().size();
+
+        isInput ? juceAudioDevice->open(requestedInChannels, 0, sampleRate, bufferSize) : juceAudioDevice->open(0, requestedOutChannels, sampleRate, bufferSize);
         juceAudioDevice->start(this);
+        
+        if (isInput) {
+            int actualChannels = juceAudioDevice->getActiveInputChannels().countNumberOfSetBits();
+            DBG("Device: " + name + " requested " + juce::String(requestedInChannels) +
+                " input channels, got " + juce::String(actualChannels));
+        }
+        else {
+            int actualChannels = juceAudioDevice->getActiveOutputChannels().countNumberOfSetBits();
+            DBG("Device: " + name + " requested " + juce::String(requestedOutChannels) +
+                " input channels, got " + juce::String(actualChannels));
+        }
+        
         if (juceAudioDevice->isOpen()) { // TODO: add else
             auto channels = isInput ? juceAudioDevice->getInputChannelNames() : juceAudioDevice->getOutputChannelNames();
             if (!channels.isEmpty()) { //TODO: Add else
@@ -88,9 +103,18 @@ void JuceWASAPIDevice::audioDeviceAboutToStart(juce::AudioIODevice* device) {
     // Have an active channel thing (maybe a little green dot?)
 }
 
-void JuceWASAPIDevice::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
+void JuceWASAPIDevice::audioDeviceIOCallbackWithContext(
+    const float* const* inputChannelData, 
+    int numInputChannels, 
+    float* const* outputChannelData, 
+    int numOutputChannels, 
+    int numSamples, 
+    const juce::AudioIODeviceCallbackContext& context)
 {
     int numChannels = isInput ? numInputChannels : numOutputChannels;
+
+    DBG("Processing " + juce::String(numChannels) + " channels for device: " + name);
+
     for (int ch = 0; ch < numChannels && ch < buffers.size(); ++ch) {
 
         const float* processedData = channelMap[ch]->process(
@@ -119,12 +143,15 @@ int JuceWASAPIDevice::calculatePreferredWidth()
 
 int JuceWASAPIDevice::getNumChannels()
 {
+    if (this == nullptr)
+        return 0;
+
     return channelMap.size();
 }
 
 juce::Point<float> JuceWASAPIDevice::getPreferredSize()
 {
-    return juce::Point<float>();
+    return juce::Point<float>(calculatePreferredWidth(), 240.0f);
 }
 
 void JuceWASAPIDevice::resized()
@@ -147,8 +174,7 @@ void JuceWASAPIDevice::resized()
     const int numColumns = channelMap.size();
 
     grid.templateRows = {
-        Track(Px(30)), // device name 
-        Track(Px(200)), //channels
+        Track(Px(250)), //channels
     };
 
     // Setup columns - one for each channel
@@ -158,11 +184,10 @@ void JuceWASAPIDevice::resized()
 
     grid.templateColumns = columnTracks;
 
-    auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1, 2, numColumns + 1); // add label
-    grid.items.add(deviceLabelItem);
+
 
     for (auto& [id, channel] : channelMap) {
-        auto channelItem = juce::GridItem(*channel).withArea(2, id + 1, 3, id + 2); // Add channels
+        auto channelItem = juce::GridItem(*channel).withArea(1, id + 1, 2, id + 2); // Add channels
         grid.items.add(channelItem);
     }
 

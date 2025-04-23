@@ -14,6 +14,15 @@ Channel::Channel(int index, juce::String channelName)
 
 }
 
+Channel::Channel(juce::String name, std::shared_ptr<RingBuffer<float>>) : index(0), rmsLevelSnapshot(0.f), bufferBased(true)
+{
+	addAndMakeVisible(verticalMeter);
+	createSlider();
+	startTimerHz(30);
+
+	setSize(SLIDER_WIDTH, 200);
+}
+
 Channel::~Channel() 
 {
 	volumeSlider.removeListener(this);
@@ -73,5 +82,23 @@ void Channel::setRMSLevel(float rmsLevel) {
 void Channel::timerCallback()
 {
 	verticalMeter.setLevel(rmsLevelSnapshot);
+//	if (bufferBased)
+//		bufferBasedChannelCallback();
 }
+
+std::shared_ptr<RingBuffer<float>> Channel::getBuffer()
+{
+	if (buffer)
+		return buffer;
+	else
+		return nullptr;
+}
+
+// alternitavley, keep the buffer here and process it in the jack callback method
+
+//void Channel::bufferBasedChannelCallback() // copy shared buffer into internal buffer, pass that to overloaded process method
+//{
+//	std::memcpy(&internalBuffer, &buffer, buffer->getSize()); 
+//	process(const_cast<float*>(internalBuffer)
+//}
 

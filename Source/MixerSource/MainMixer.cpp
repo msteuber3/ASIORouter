@@ -6,13 +6,17 @@
 // Remove scanCurrentDriver from constructor
 
 MainMixer::MainMixer() :
-    juce::Component()
+    juce::Component(),
+    audioDeviceManager(std::make_unique<juce::AudioDeviceManager>())
 {
         mixerBox.flexDirection = juce::FlexBox::Direction::row;
         mixerBox.flexWrap = juce::FlexBox::Wrap::wrap;
     if (!generateDeviceType()) {
         handleDeviceNotFound();
     }
+    if (activateJackVirtualDevice)
+        startJack();
+
 }
 
 
@@ -41,13 +45,40 @@ bool MainMixer::generateDeviceType()
 
 void MainMixer::createWASAPIDevices()
 {
+    auto bounds = getLocalBounds();
     WASAPIContainer = std::make_unique<JuceWASAPIDeviceContainer>(std::move(deviceType));
     addAndMakeVisible(*WASAPIContainer);
-    mixerBox.items.add(juce::FlexItem(*WASAPIContainer).withFlex(1));
+    mixerBox.items.add(juce::FlexItem(*WASAPIContainer).withFlex(1).withMinWidth(bounds.getWidth()).withMinHeight(bounds.getHeight()));
 }
 
 void MainMixer::createASIODevices()
 {
+    audioDeviceManager->initialise(20, 20, nullptr, true);
+
+    auto& deviceTypes = audioDeviceManager->getAvailableDeviceTypes();
+    for (auto* type : deviceTypes)
+    {
+        if (type->getTypeName() == "ASIO")
+        {
+            type->scanForDevices();
+
+            auto devices = type->getDeviceNames();
+            for (const auto& name : devices)
+            {
+                if (name.containsIgnoreCase("focusrite usb"))
+                {
+                    auto* device = type->createDevice(name, name);
+                    auto juceAsioDevice = std::make_unique<JuceAsioDevice>(device);
+                    addAndMakeVisible(juceAsioDevice.get());
+                    mixerBox.items.add(juce::FlexItem(*juceAsioDevice).withMinWidth(juceAsioDevice->getWidth()).withMinHeight(juceAsioDevice->getHeight()).withFlex(1.0f));
+                    juceDevices.add(std::move(juceAsioDevice));
+                }
+            }
+        }
+    }
+}
+
+    /*
     deviceType->scanForDevices();
 
     auto deviceNames = deviceType->getDeviceNames();
@@ -66,6 +97,7 @@ void MainMixer::createASIODevices()
     }
 
 }
+*/
 
 void MainMixer::calculatePreferredSize()
 {
@@ -99,16 +131,34 @@ void MainMixer::handleDeviceNotFound()
     setSize(500, 300);
 }
 
+void MainMixer::startJack()
+{
+    jackWrapper = std::make_unique<JackWrapper>("VirtualJackDevice");
+    addAndMakeVisible(*jackWrapper);
+    mixerBox.items.add(juce::FlexItem(*jackWrapper).withFlex(1));
+    jackWrapper->start();
+    jackWrapper->addChannel(juceDevices[0]->getBuffer(true, 0), true, "testDevice");
+}
+
 juce::Point<float> MainMixer::getPreferredSize() const
 {
     return preferredSize;
 }
 
 void MainMixer::paint(juce::Graphics& g)
-{}
+{
+    g.setColour(juce::Colours::white);
+    g.drawRect(getLocalBounds(), 1);
+}
 
 void MainMixer::resized() {
+    DBG("MainMixer bounds: " + getLocalBounds().toString());
+
     mixerBox.performLayout(getLocalBounds().reduced(10));
+
+    if (WASAPIContainer != nullptr) {
+        DBG("WASAPIContainer bounds: " + WASAPIContainer->getBounds().toString());
+    }
 }
 
 // Banished to the end of the source file until I feel like dealing with them

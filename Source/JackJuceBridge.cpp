@@ -126,7 +126,7 @@ int JackDeviceBridge::jackProcessCallback(jack_nframes_t nframes, void* arg) {
 // JACK process implementation
 int JackDeviceBridge::processJack(jack_nframes_t nframes) {
 
-    // For each input channel (JUCE input → JACK output)
+    // For each input channel (JUCE input -> JACK output)
     for (auto& pair : inputPortMap) {
         int channel = pair.first;
         jack_port_t* port = pair.second;

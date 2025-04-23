@@ -61,6 +61,8 @@ public:
         void resized() override;
 
         void soloResize();
+
+        void paint(juce::Graphics& g) override;
     
         private:
             juce::String name;
@@ -103,7 +105,7 @@ private:
     };
 
     const juce::StringArray knownHardware = {
-        "focusrite",
+        "focusrite"
      };
 
     juce::FlexBox containerBox;

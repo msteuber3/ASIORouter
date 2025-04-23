@@ -8,6 +8,18 @@
     <Filter Include="AsioRouter\Source\MenuBarSource">
       <UniqueIdentifier>{52522006-76A5-CB0F-41AB-3C62F7DF7988}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AsioRouter\Source\MixerSource\JACK">
+      <UniqueIdentifier>{70128EB1-09B4-D359-190C-6D88083167E4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AsioRouter\Source\MixerSource\Channels">
+      <UniqueIdentifier>{FE5AB1D1-F2DF-9E9F-7151-18E8B85C9124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AsioRouter\Source\MixerSource\ASIO">
+      <UniqueIdentifier>{77DBB2D6-69F4-5206-8806-024259F901D7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AsioRouter\Source\MixerSource\WASAPI">
+      <UniqueIdentifier>{AB0793D7-37C4-91A4-D19F-82E922C01454}</UniqueIdentifier>
+    </Filter>
     <Filter Include="AsioRouter\Source\MixerSource">
       <UniqueIdentifier>{73416378-062A-4730-2495-DA5BEED5B569}</UniqueIdentifier>
     </Filter>
@@ -718,25 +730,28 @@
     <ClCompile Include="..\..\Source\MenuBarSource\PropertiesWindow.cpp">
       <Filter>AsioRouter\Source\MenuBarSource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\MixerSource\Channel.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\MixerSource\MainMixer.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\JuceWASAPIDevice.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\JackJuceBridge.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
+      <Filter>AsioRouter\Source\MixerSource\JACK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\JackWrapper.cpp">
+      <Filter>AsioRouter\Source\MixerSource\JACK</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MixerSource\VerticalMeter.cpp">
-      <Filter>AsioRouter\Source\MixerSource</Filter>
+      <Filter>AsioRouter\Source\MixerSource\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MixerSource\Channel.cpp">
+      <Filter>AsioRouter\Source\MixerSource\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\JuceAsioDevice.cpp">
+      <Filter>AsioRouter\Source\MixerSource\ASIO</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\JuceWASAPIDeviceContainer.cpp">
+      <Filter>AsioRouter\Source\MixerSource\WASAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\JuceWASAPIDevice.cpp">
+      <Filter>AsioRouter\Source\MixerSource\WASAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MixerSource\MainMixer.cpp">
       <Filter>AsioRouter\Source\MixerSource</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
@@ -3744,6 +3759,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Headers\JackWrapper.h">
+      <Filter>AsioRouter\Headers</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Headers\JackJuceBridge.h">
       <Filter>AsioRouter\Headers</Filter>
     </ClInclude>

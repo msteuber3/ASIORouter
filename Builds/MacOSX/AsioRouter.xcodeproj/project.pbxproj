@@ -51,6 +51,7 @@
 		E723C06D224C87156E9703A5 /* include_juce_dsp.mm */ = {isa = PBXBuildFile; fileRef = 8D686C3DB253B7DF55E237B6; };
 		E8AF14AA801D79548D519877 /* MenuBar.cpp */ = {isa = PBXBuildFile; fileRef = DAE90E1445E43A6E1236FC86; };
 		EF228742F8E57FDE8C08E08E /* DiscRecording.framework */ = {isa = PBXBuildFile; fileRef = BB6A98909F14AAA36573DE62; };
+		F6EDAA5F9A3FB0B0EF48032F /* JackWrapper.cpp */ = {isa = PBXBuildFile; fileRef = 617C402D0DBD4829757FA051; };
 		FC354C641367D94A046A6F21 /* WebKit.framework */ = {isa = PBXBuildFile; fileRef = 31F4B6F22E556CFB338EC86F; };
 		FD19C345B3806276778F6B3E /* QuartzCore.framework */ = {isa = PBXBuildFile; fileRef = 5206AE742BE3CEF55B3FBB65; };
 /* End PBXBuildFile section */
@@ -75,6 +76,7 @@
 		2C266076C51C6A2DB188B554 /* juce_audio_devices */ /* juce_audio_devices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_devices; path = "~/JUCE/modules/juce_audio_devices"; sourceTree = "<absolute>"; };
 		3176C63C4D3A9D5AC3AEA401 /* Info-App.plist */ /* Info-App.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-App.plist"; path = "Info-App.plist"; sourceTree = SOURCE_ROOT; };
 		31F4B6F22E556CFB338EC86F /* WebKit.framework */ /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		36E286E991C7E4CB4AC8B8B4 /* JackWrapper.h */ /* JackWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JackWrapper.h; path = ../../Headers/JackWrapper.h; sourceTree = SOURCE_ROOT; };
 		3ADA77ABEDB94A7CCB8F2F4B /* Accelerate.framework */ /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		3BE013402A158C9E16807A00 /* IOKit.framework */ /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		3C7C737730882F5FB98C6DDB /* include_juce_core_CompilationTime.cpp */ /* include_juce_core_CompilationTime.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_core_CompilationTime.cpp; path = ../../JuceLibraryCode/include_juce_core_CompilationTime.cpp; sourceTree = SOURCE_ROOT; };
@@ -87,6 +89,7 @@
 		516926BF474552AA99EA6273 /* Main.cpp */ /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = ../../Source/Main.cpp; sourceTree = SOURCE_ROOT; };
 		5206AE742BE3CEF55B3FBB65 /* QuartzCore.framework */ /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		53407FEDD19B8A621493EFE1 /* JuceAsioDevice.cpp */ /* JuceAsioDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = JuceAsioDevice.cpp; path = ../../Source/JuceAsioDevice.cpp; sourceTree = SOURCE_ROOT; };
+		617C402D0DBD4829757FA051 /* JackWrapper.cpp */ /* JackWrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = JackWrapper.cpp; path = ../../Source/JackWrapper.cpp; sourceTree = SOURCE_ROOT; };
 		67FA69E2BB7DC6D1647E9CB1 /* juce_dsp */ /* juce_dsp */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_dsp; path = "~/JUCE/modules/juce_dsp"; sourceTree = "<absolute>"; };
 		6A914997FC37021F77F67B79 /* MainMixer.h */ /* MainMixer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainMixer.h; path = ../../Headers/MainMixer.h; sourceTree = SOURCE_ROOT; };
 		6B21591C1D3338A4F7CD8639 /* PropertiesWindow.cpp */ /* PropertiesWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PropertiesWindow.cpp; path = ../../Source/MenuBarSource/PropertiesWindow.cpp; sourceTree = SOURCE_ROOT; };
@@ -170,6 +173,14 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
+		42F7D9E65850D34A077F93BE /* ASIO */ = {
+			isa = PBXGroup;
+			children = (
+				53407FEDD19B8A621493EFE1,
+			);
+			name = ASIO;
+			sourceTree = "<group>";
+		};
 		66D7D698F8861D4FFE047036 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,13 +223,11 @@
 		76425230D40C4EB770E54CD7 /* MixerSource */ = {
 			isa = PBXGroup;
 			children = (
-				16762F635EEB8E6E7C936557,
+				973CB2CFBE285933937A029A,
+				F68A8144507E49B575535FF0,
+				42F7D9E65850D34A077F93BE,
+				99B8FAEF33B865FCFD18F891,
 				6B47D1C39D28CC029D17B32C,
-				875F08B9D7D02253BFF10DFD,
-				53407FEDD19B8A621493EFE1,
-				DB6D3C30EEBF3537DDF45F14,
-				402422CCF9082304DC703335,
-				07884F09F2CEC4895D30D759,
 			);
 			name = MixerSource;
 			sourceTree = "<group>";
@@ -226,6 +235,7 @@
 		76669B0DAE565C1C57751114 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				36E286E991C7E4CB4AC8B8B4,
 				DA72DF6799DA165B6625A8B6,
 				838DA08356A75D624D45F76D,
 				72A56ADD4BEE454F8BF62999,
@@ -275,6 +285,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		973CB2CFBE285933937A029A /* JACK */ = {
+			isa = PBXGroup;
+			children = (
+				DB6D3C30EEBF3537DDF45F14,
+				617C402D0DBD4829757FA051,
+			);
+			name = JACK;
+			sourceTree = "<group>";
+		};
+		99B8FAEF33B865FCFD18F891 /* WASAPI */ = {
+			isa = PBXGroup;
+			children = (
+				07884F09F2CEC4895D30D759,
+				875F08B9D7D02253BFF10DFD,
+			);
+			name = WASAPI;
+			sourceTree = "<group>";
+		};
 		BB0CE118D428C62E9BF18F5B /* JUCE Library Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,6 +344,15 @@
 				E509B835F83F2C296AEBC92F,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F68A8144507E49B575535FF0 /* Channels */ = {
+			isa = PBXGroup;
+			children = (
+				402422CCF9082304DC703335,
+				16762F635EEB8E6E7C936557,
+			);
+			name = Channels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -407,13 +444,14 @@
 				E8AF14AA801D79548D519877,
 				05E491E58423EA3411FFFA1C,
 				92B6BBF6DC93C26B7E044236,
-				A3B8FC3FF48E234410711A4A,
-				6C74401DB3ECF6164F474856,
-				0D62E554E2CF618769B1D2CC,
-				925A7CBCDDFF84E7079B2630,
 				C3506119487AEDA7DDCD7809,
+				F6EDAA5F9A3FB0B0EF48032F,
 				5AF7EB52BF4DB2C01E42BC5D,
+				A3B8FC3FF48E234410711A4A,
+				925A7CBCDDFF84E7079B2630,
 				208F706FD3BF328B02014505,
+				0D62E554E2CF618769B1D2CC,
+				6C74401DB3ECF6164F474856,
 				0AF6287A61B5E4B5631E8660,
 				A45BED83A8867EA6906EE878,
 				0BB336E696607EC98D551869,

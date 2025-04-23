@@ -24,19 +24,43 @@ JuceAsioDevice::JuceAsioDevice(juce::AudioIODevice* juceIODevice) :
         auto sampleRate = sampleRates.isEmpty() ? 44100.0 : sampleRates[0];
         auto bufferSize = bufferSizes.isEmpty() ? 512 : bufferSizes[0];
 
-        juceAudioDevice->open(2, 0, sampleRate, bufferSize);
+        int numInputChannels = juceAudioDevice->getInputChannelNames().size();
+        int numOutputChannels = juceAudioDevice->getOutputChannelNames().size();
+
+        juce::BigInteger activeInputChannels;
+        juce::BigInteger activeOutputChannels;
+
+        activeInputChannels.setRange(0, 6, true);
+        activeOutputChannels.setRange(0, 4, true);
+
+        juceAudioDevice->open(activeInputChannels, activeOutputChannels, sampleRate, bufferSize);
         juceAudioDevice->start(this);
        
         auto inputChannels = juceAudioDevice->getInputChannelNames();
         auto outputChannels = juceAudioDevice->getOutputChannelNames();
 
+        int actualInChannels = juceAudioDevice->getActiveInputChannels().countNumberOfSetBits();
+        DBG("Device: " + juceAudioDevice->getName() + " requested " + juce::String(numInputChannels) +
+          " input channels, got " + juce::String(actualInChannels));
+ 
+        int actualOutChannels = juceAudioDevice->getActiveOutputChannels().countNumberOfSetBits();
+        DBG("Device: " + juceAudioDevice->getName() + " requested " + juce::String(numOutputChannels) +
+            " output channels, got " + juce::String(actualOutChannels));
+       
+
         if (!inputChannels.isEmpty())
             createInputChannels(inputChannels);
 
-        if (!inputChannels.isEmpty())
+        if (!outputChannels.isEmpty())
             createOutputChannels(outputChannels);
     }
     setSize(calculatePreferredWidth(), 500);
+
+    DBG("Opened ASIO4ALL with "
+        << juceAudioDevice->getActiveInputChannels().countNumberOfSetBits()
+        << " input channels and "
+        << juceAudioDevice->getActiveOutputChannels().countNumberOfSetBits()
+        << " output channels.");
 
 }
 
@@ -92,6 +116,11 @@ std::unique_ptr<juce::AudioIODevice>& JuceAsioDevice::getAudioDevice()
     return juceAudioDevice;
 }
 
+std::shared_ptr<RingBuffer<float>> JuceAsioDevice::getBuffer(bool isInput, int index)
+{
+    return (isInput ? inputBuffers[index] : outputBuffers[index]);
+}
+
 void JuceAsioDevice::audioDeviceAboutToStart(juce::AudioIODevice* device) {}
 
 void JuceAsioDevice::audioDeviceIOCallbackWithContext(const float* const* inputChannelData, int numInputChannels, float* const* outputChannelData, int numOutputChannels, int numSamples, const juce::AudioIODeviceCallbackContext& context)
@@ -111,6 +140,19 @@ void JuceAsioDevice::audioDeviceIOCallbackWithContext(const float* const* inputC
         inputBuffers[ch]->write(processedData, numSamples);
     }
     for (int ch = 0; ch < numOutputChannels && ch < outputBuffers.size(); ++ch) {
+        if (outputChannelData[ch] != nullptr)
+            std::memcpy(outputChannelData[ch], inputChannelData[ch], sizeof(float) * numSamples);
+        else
+            std::fill(outputChannelData[ch], outputChannelData[ch] + numSamples, 0.0f);
+
+        const float* processedData = outputChannelMap[ch]->process(outputChannelData[ch], numSamples);
+        float squaredSum = 0.0f;
+        for (int i = 0; i < numSamples; ++i) {
+            squaredSum += processedData[i] * processedData[i];
+        }
+        float rms = std::sqrt(squaredSum / numSamples);
+        outputChannelMap[ch]->setRMSLevel(juce::Decibels::gainToDecibels(rms));
+
         outputBuffers[ch]->read(outputChannelData[ch], numSamples);
     }
 }

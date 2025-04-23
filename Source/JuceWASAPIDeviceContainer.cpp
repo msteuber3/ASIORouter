@@ -17,6 +17,10 @@ JuceWASAPIDeviceContainer::JuceWASAPIDeviceContainer(std::unique_ptr<juce::Audio
     createOutputDevices();
     sortDevices();
     createSortedDevices();
+
+    DBG("Input devices created: " + juce::String(inputDevices.size()));
+    DBG("Output devices created: " + juce::String(outputDevices.size()));
+    DBG("Sorted devices created: " + juce::String(sortedDevicesMap.size()));
 }
 
 JuceWASAPIDeviceContainer::~JuceWASAPIDeviceContainer()
@@ -55,7 +59,7 @@ void JuceWASAPIDeviceContainer::createOutputDevices()
 
     for (const juce::String& name : outputDeviceNames) {
         auto newAudioDevice = deviceType->createDevice(name, name);
-        if (!newAudioDevice->getOutputChannelNames().isEmpty()) {
+        if (!newAudioDevice->getOutputChannelNames().isEmpty() && !name.containsIgnoreCase("realtek digital")) {
             auto device = std::make_unique<JuceWASAPIDevice>(newAudioDevice, false);
             outputDevices.add(std::move(device));
         }
@@ -91,7 +95,7 @@ void JuceWASAPIDeviceContainer::createSortedDevices()
     for (juce::String devName : foundHardwareDeviceNames) {
         sortedDevicesMap.emplace(devName, std::make_unique<SortedWASPIDevice>(devName));
         addAndMakeVisible(*sortedDevicesMap.at(devName));
-        containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)));
+        containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)).withFlex(1));
     }
 
     // This is fucking stupid and needs to be cleaned
@@ -144,7 +148,7 @@ void JuceWASAPIDeviceContainer::createSortedDevices()
             sortedDevicesMap.at(devName)->insertNewDevice(inputDevices.removeAndReturn(i), true);
 
             addAndMakeVisible(*sortedDevicesMap.at(devName));
-            containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)));
+            containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)).withFlex(1));
         }
     }
     if (!outputDevices.isEmpty()) {
@@ -157,18 +161,31 @@ void JuceWASAPIDeviceContainer::createSortedDevices()
             sortedDevicesMap.at(devName)->insertNewDevice(outputDevices.removeAndReturn(i), false);
 
             addAndMakeVisible(*sortedDevicesMap.at(devName));
-            containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)));
+            containerBox.items.add(juce::FlexItem(*sortedDevicesMap.at(devName)).withFlex(1));
         }
     }
 
 }
 void JuceWASAPIDeviceContainer::resized()
 {
+    DBG("JuceWASAPIDeviceContainer bounds: " + getLocalBounds().toString());
+
     containerBox.performLayout(getLocalBounds().reduced(10));
+
+    int count = 0;
+    for (auto& [name, device] : sortedDevicesMap) {
+        if (count++ < 3) { // Just check first 3 to avoid log spam
+            DBG(name + " bounds: " + device->getBounds().toString());
+        }
+    }
 }
 
 void JuceWASAPIDeviceContainer::paint(juce::Graphics& g)
 {
+    g.fillAll(juce::Colours::darkgrey.withAlpha(0.2f));
+    g.setColour(juce::Colours::yellow);
+    g.drawRect(getLocalBounds(), 2);
+
 }
 
 
@@ -229,7 +246,7 @@ int JuceWASAPIDeviceContainer::SortedWASPIDevice::getFullWidth()
 int JuceWASAPIDeviceContainer::SortedWASPIDevice::getLargestDeviceNumInChannels()
 {
     int largest = 0;
-    for (int i; i < inputDevices.size(); i++)
+    for (int i = 0; i < inputDevices.size(); i++)
         largest = inputDevices[i]->getNumChannels() > largest ? inputDevices[i]->getNumChannels() : largest;
 
     return largest;
@@ -238,7 +255,7 @@ int JuceWASAPIDeviceContainer::SortedWASPIDevice::getLargestDeviceNumInChannels(
 int JuceWASAPIDeviceContainer::SortedWASPIDevice::getLargestDeviceNumOutChannels()
 {
     int largest = 0;
-    for (int i; i < outputDevices.size(); i++)
+    for (int i = 0; i < outputDevices.size(); i++)
         largest = outputDevices[i]->getNumChannels() > largest ? outputDevices[i]->getNumChannels() : largest;
 
     return largest;
@@ -247,19 +264,19 @@ int JuceWASAPIDeviceContainer::SortedWASPIDevice::getLargestDeviceNumOutChannels
 int JuceWASAPIDeviceContainer::SortedWASPIDevice::getNumInChannels()
 {
     int largest = 0;
-    for (int i; i < inputDevices.size(); i++)
+    for (int i = 0; i < inputDevices.size(); i++)
         largest += inputDevices[i]->getNumChannels() + 1; // Add an additional channel's worth of space between jucedevices
 
-    return largest - 1; //& and remove the last 
+    return largest; //& and remove the last 
 }
 
 int JuceWASAPIDeviceContainer::SortedWASPIDevice::getNumOutChannels()
 {
     int largest = 0;
-    for (int i; i < outputDevices.size(); i++)
+    for (int i = 0; i < outputDevices.size(); i++)
         largest += outputDevices[i]->getNumChannels() + 1; // Same dealio here, see above
 
-    return largest - 1; //yur
+    return largest; //yur
 }
 
 
@@ -287,6 +304,9 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::createGUI()
 
 void JuceWASAPIDeviceContainer::SortedWASPIDevice::resized()
 {
+    DBG("SortedWASPIDevice " + name + " resizing. Input devices: " + juce::String(inputDevices.size()) +
+        ", Output devices: " + juce::String(outputDevices.size()));
+
     if (!solo) {
         auto bounds = getLocalBounds().reduced(10);
 
@@ -309,25 +329,24 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::resized()
         grid.templateRows = {
             Track(Px(30)), // device name 
             Track(Px(20)), // Inputs label
-            Track(Px(200)), //input channels
+            Track(Px(250)), //input channels
             Track(Px(20)), //outputs label
-            Track(Px(200)) }; //output channels
+            Track(Px(250)) }; //output channels
 
         // Setup columns - one for each channel
         juce::Array<Track> columnTracks;
         for (int i = 0; i < numColumns; ++i)
-            columnTracks.add(Track(Px(largestDevice * SLIDER_WIDTH)));
+            columnTracks.add(Track(Px((largestDevice * SLIDER_WIDTH) + 20)));
 
         grid.templateColumns = columnTracks;
-
         // Create a Grid Item for each component
 
         // Device label (spans all columns)
-        auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1, 2, numColumns + 1);
+        auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1).withJustifySelf(juce::GridItem::JustifySelf::center);
         grid.items.add(deviceLabelItem);
 
         // Input section label (spans all columns)
-        auto inputLabelItem = juce::GridItem(inputSectionLabel).withArea(2, 1, 3, numColumns + 1);
+        auto inputLabelItem = juce::GridItem(inputSectionLabel).withArea(2, 1).withJustifySelf(juce::GridItem::JustifySelf::center);
         grid.items.add(inputLabelItem);
 
         // Input channels
@@ -337,7 +356,7 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::resized()
         }
 
         // Output section label (spans all columns)
-        auto outputLabelItem = juce::GridItem(outputSectionLabel).withArea(4, 1, 5, numColumns + 1);
+        auto outputLabelItem = juce::GridItem(outputSectionLabel).withArea(4, 1).withJustifySelf(juce::GridItem::JustifySelf::center);
         grid.items.add(outputLabelItem);
 
         // Output channels
@@ -375,7 +394,7 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::soloResize()
     grid.templateRows = {
         Track(Px(30)), // device name 
         Track(Px(20)), // type label
-        Track(Px(200)), //type channels
+        Track(Px(250)), //type channels
     };
 
     // Setup columns - one for each channel
@@ -388,12 +407,12 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::soloResize()
     // Create a Grid Item for each component
 
     // Device label (spans all columns)
-    auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1, 2, numColumns + 1);
+    auto deviceLabelItem = juce::GridItem(deviceLabel).withArea(1, 1).withJustifySelf(juce::GridItem::JustifySelf::center);
     grid.items.add(deviceLabelItem);
 
     if (isInput) {
         // Input section label (spans all columns)
-        auto inputLabelItem = juce::GridItem(inputSectionLabel).withArea(2, 1, 3, numColumns + 1);
+        auto inputLabelItem = juce::GridItem(inputSectionLabel).withArea(2, 1).withJustifySelf(juce::GridItem::JustifySelf::center);
         grid.items.add(inputLabelItem);
 
         // Input channels
@@ -415,4 +434,11 @@ void JuceWASAPIDeviceContainer::SortedWASPIDevice::soloResize()
     }
     // Perform layout
     grid.performLayout(bounds);
+}
+
+void JuceWASAPIDeviceContainer::SortedWASPIDevice::paint(juce::Graphics& g)
+{
+    g.fillAll(juce::Colours::black.withAlpha(0.1f));
+    g.setColour(juce::Colours::green);
+    g.drawRect(getLocalBounds(), 2);
 }

@@ -4,6 +4,7 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_ASIO=1">
   <MAINGROUP id="j9zifi" name="AsioRouter">
     <GROUP id="{EBA70CA8-4366-8D16-0F41-57759F9FED7A}" name="Headers">
+      <FILE id="DfsKXU" name="JackWrapper.h" compile="0" resource="0" file="Headers/JackWrapper.h"/>
       <FILE id="GGkYUm" name="JackJuceBridge.h" compile="0" resource="0"
             file="Headers/JackJuceBridge.h"/>
       <FILE id="MU9laJ" name="Channel.h" compile="0" resource="0" file="Headers/Channel.h"/>
@@ -33,18 +34,27 @@
               file="Source/MenuBarSource/PropertiesWindow.cpp"/>
       </GROUP>
       <GROUP id="{ED673598-C240-93C6-ADC4-C5845F7209E7}" name="MixerSource">
-        <FILE id="eX4iUw" name="Channel.cpp" compile="1" resource="0" file="Source/MixerSource/Channel.cpp"/>
+        <GROUP id="{B623F98A-5982-A0AE-3B1E-56CCBFA35DA0}" name="JACK">
+          <FILE id="jlfazN" name="JackJuceBridge.cpp" compile="1" resource="0"
+                file="Source/JackJuceBridge.cpp"/>
+          <FILE id="dR3JRP" name="JackWrapper.cpp" compile="1" resource="0" file="Source/JackWrapper.cpp"/>
+        </GROUP>
+        <GROUP id="{CE75546A-AED2-329D-88E0-7E6A0F1541B7}" name="Channels">
+          <FILE id="ZebZYO" name="VerticalMeter.cpp" compile="1" resource="0"
+                file="Source/MixerSource/VerticalMeter.cpp"/>
+          <FILE id="eX4iUw" name="Channel.cpp" compile="1" resource="0" file="Source/MixerSource/Channel.cpp"/>
+        </GROUP>
+        <GROUP id="{33DC6C22-7B6A-E379-3E17-B531B5D801F3}" name="ASIO">
+          <FILE id="OJNNlQ" name="JuceAsioDevice.cpp" compile="1" resource="0"
+                file="Source/JuceAsioDevice.cpp"/>
+        </GROUP>
+        <GROUP id="{F78B5896-57D6-28C5-4D49-E6841712CD78}" name="WASAPI">
+          <FILE id="pKzj9R" name="JuceWASAPIDeviceContainer.cpp" compile="1"
+                resource="0" file="Source/JuceWASAPIDeviceContainer.cpp"/>
+          <FILE id="MGk6pe" name="JuceWASAPIDevice.cpp" compile="1" resource="0"
+                file="Source/JuceWASAPIDevice.cpp"/>
+        </GROUP>
         <FILE id="Wrq2Pu" name="MainMixer.cpp" compile="1" resource="0" file="Source/MixerSource/MainMixer.cpp"/>
-        <FILE id="MGk6pe" name="JuceWASAPIDevice.cpp" compile="1" resource="0"
-              file="Source/JuceWASAPIDevice.cpp"/>
-        <FILE id="OJNNlQ" name="JuceAsioDevice.cpp" compile="1" resource="0"
-              file="Source/JuceAsioDevice.cpp"/>
-        <FILE id="jlfazN" name="JackJuceBridge.cpp" compile="1" resource="0"
-              file="Source/JackJuceBridge.cpp"/>
-        <FILE id="ZebZYO" name="VerticalMeter.cpp" compile="1" resource="0"
-              file="Source/MixerSource/VerticalMeter.cpp"/>
-        <FILE id="pKzj9R" name="JuceWASAPIDeviceContainer.cpp" compile="1"
-              resource="0" file="Source/JuceWASAPIDeviceContainer.cpp"/>
       </GROUP>
       <FILE id="YFlw9n" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="D8skfB" name="MainComponent.cpp" compile="1" resource="0"

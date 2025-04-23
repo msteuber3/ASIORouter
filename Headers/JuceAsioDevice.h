@@ -29,6 +29,8 @@ public:
 
     std::unique_ptr<juce::AudioIODevice>& getAudioDevice();
 
+    std::shared_ptr<RingBuffer<float>> getBuffer(bool isInput, int index);
+
     void audioDeviceAboutToStart(juce::AudioIODevice* device) override;
 
     void audioDeviceIOCallbackWithContext(const float* const* inputChannelData,
@@ -52,8 +54,8 @@ private:
     std::map<int, std::unique_ptr<Channel>> inputChannelMap;
     std::map<int, std::unique_ptr<Channel>> outputChannelMap;
 
-    std::vector< std::unique_ptr<RingBuffer<float>>> inputBuffers;
-    std::vector< std::unique_ptr<RingBuffer<float>>> outputBuffers;
+    std::vector< std::shared_ptr<RingBuffer<float>>> inputBuffers;
+    std::vector< std::shared_ptr<RingBuffer<float>>> outputBuffers;
 
     juce::Label deviceLabel;
     juce::Label inputSectionLabel;
